@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--Shadows color. Transparency base on percentage: ie shadow 13: ~13% transparency-->
+    <color name="shadow_85">#D9000000</color>
+    <color name="shadow_73">#6A000000</color>
+    <color name="shadow_55">#8C000000</color>
+    <color name="shadow_37">#5E000000</color>
+    <color name="shadow_32">#52000000</color>
+    <color name="shadow_25">#40000000</color>
+    <color name="shadow_13">#21000000</color>
+    <color name="shadow_05">#0C000000</color>
+
+    <!-- highlight colors -->
+    <color name="highlight_25">#40FFFFFF</color>
+    <color name="highlight_13">#21FFFFFF</color>
+    <color name="highlight_05">#0CFFFFFF</color>
+</resources>
