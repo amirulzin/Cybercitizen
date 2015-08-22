@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@null"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:paddingBottom="4dp">
+
+        <ImageView
+
+            android:id="@+id/li_eh_image"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:layout_margin="8dp"
+            android:scaleType="fitXY"
+            tools:background="?attr/colorPrimary" />
+
+        <TextView
+            android:id="@+id/li_eh_header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="4dp"
+            android:layout_marginTop="8dp"
+            android:layout_toRightOf="@id/li_eh_image"
+            android:clickable="true"
+            android:paddingRight="8dp"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Title"
+            android:textColor="?attr/colorPrimary"
+            tools:text="Starbucks" />
+
+
+        <LinearLayout
+            android:id="@+id/li_ehe_btncontainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/li_eh_header"
+            android:layout_marginRight="8dp"
+            android:layout_toRightOf="@id/li_eh_image"
+            android:clickable="true"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:id="@+id/li_ehe_walk"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:backgroundTint="?attr/colorAccent"
+                android:elevation="3dp"
+                android:onClick="switchSuggestion"
+                android:src="@drawable/ic_action_directions_run" />
+
+            <ImageButton
+                android:id="@+id/li_ehe_car"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:backgroundTint="?attr/colorAccent"
+                android:elevation="3dp"
+                android:onClick="switchSuggestion"
+                android:src="@drawable/ic_action_directions_car" />
+
+            <ImageButton
+                android:id="@+id/li_ehe_bus"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:backgroundTint="?attr/colorAccent"
+                android:elevation="3dp"
+                android:onClick="switchSuggestion"
+                android:src="@drawable/ic_action_directions_bus" />
+
+            <ImageButton
+                android:id="@+id/li_ehe_taxi"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:backgroundTint="?attr/colorAccent"
+                android:elevation="3dp"
+                android:onClick="switchSuggestion"
+                android:src="@drawable/ic_action_local_taxi" />
+
+        </LinearLayout>
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginBottom="6dp"
+        android:background="@color/shadow_25" />
+
+    <FrameLayout
+        android:id="@+id/special_mapfragment"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/li_eh_detailview"
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top|left"
+            android:layout_margin="8dp"
+            app:cardUseCompatPadding="true"
+            app:contentPadding="8dp">
+
+            <TextView
+                android:id="@+id/special_suggestion"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableLeft="@drawable/ic_action_location_city"
+                android:drawablePadding="8dp"
+                android:drawableTint="?attr/colorPrimary"
+                android:gravity="center_vertical"
+                android:paddingRight="4dp"
+                android:text="Sunny enough for a walk!" />
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/li_eh_baseview"
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_margin="8dp"
+            app:cardUseCompatPadding="true"
+            app:contentPadding="8dp">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/li_eh_wifistatus"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    tools:text="Wifi Available" />
+
+                <TextView
+                    android:id="@+id/li_eh_promo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/colorTextAlert"
+                    tools:text="Lunch hour promo" />
+
+                <TextView
+                    android:id="@+id/li_eh_congestion"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    tools:text="10% congestion" />
+
+                <TextView
+                    android:id="@+id/li_ehe_tags"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Coffee" />
+
+            </LinearLayout>
+        </android.support.v7.widget.CardView>
+    </FrameLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical|right">
+
+        <Button
+            style="@style/Base.Widget.AppCompat.Button.ButtonBar.AlertDialog"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="dismiss"
+            android:text="DISMISS" />
+
+        <Button
+            style="@style/Base.Widget.AppCompat.Button.ButtonBar.AlertDialog"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="8dp"
+            android:onClick="dismiss"
+            android:text="I'M COMING" />
+    </LinearLayout>
+</LinearLayout>
+

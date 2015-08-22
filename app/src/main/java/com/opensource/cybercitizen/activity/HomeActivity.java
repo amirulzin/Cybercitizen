@@ -61,8 +61,30 @@ public class HomeActivity extends RecyclerHomeBaseActivity
     public void init()
     {
         Weather weather = new Weather();
-        weather.getWeather();
+        weather.getWeather(new Weather.Listener()
+        {
+            @Override
+            public void onWeatherReady(final Weather weather)
+            {
+                getHeaderImageView().post(new Runnable()
+                {
+                    @Override
+                    public void run()
+                    {
+                        int gifId;
+                        if (weather.isSunnyCurrently())
+                        {
+                            gifId = R.raw.sunny;
+                        }
+                        else
+                            gifId = R.raw.rainy;
+                        Glide.with(HomeActivity.this).load(gifId).into(getHeaderImageView());
+                    }
+                });
+            }
+        });
     }
+
 
     @Override
     public void setupView(final Bundle savedInstanceState, final View baseLayout)
@@ -192,7 +214,7 @@ public class HomeActivity extends RecyclerHomeBaseActivity
         public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener
         {
             private static final int VIEWHOLDER_TAG = 1942;
-            private static final int LAYOUT_RES = R.layout.listitem_home;
+            private static final int LAYOUT_RES = R.layout.listitem_mainhome;
             private final TextView mTitle;
             private final TextView mItemCount;
             private final View mColorView;
