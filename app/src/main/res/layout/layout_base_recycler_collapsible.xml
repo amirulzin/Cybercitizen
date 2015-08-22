@@ -5,13 +5,13 @@
     android:layout_height="match_parent"
     tools:context=".HomeActivity">
 
-    <android.support.v7.widget.RecyclerView
+
+<android.support.v7.widget.RecyclerView
         android:id="@+id/lbnc_recyclerview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         tools:ignore="PrivateResource">
-
     </android.support.v7.widget.RecyclerView>
 
     <android.support.design.widget.AppBarLayout
@@ -47,5 +47,6 @@
         </android.support.design.widget.CollapsingToolbarLayout>
 
     </android.support.design.widget.AppBarLayout>
+
 
 </android.support.design.widget.CoordinatorLayout>

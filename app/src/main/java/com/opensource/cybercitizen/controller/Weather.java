@@ -1,9 +1,15 @@
 package com.opensource.cybercitizen.controller;
 
+import android.util.Log;
+
 import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 
@@ -11,8 +17,12 @@ public class Weather
 {
     private static final String apiKey = "d18f8f6d7b14ee4308e53d3f87247d71";
     private static final int cityId = 6697380;
-
     private final String endpoint = "http://api.openweathermap.org/data/2.5/weather?id=6697380&appid=d18f8f6d7b14ee4308e53d3f87247d71";
+
+    public String getEndpoint()
+    {
+        return endpoint;
+    }
 
     public void getWeather()
     {
@@ -31,7 +41,21 @@ public class Weather
             public void onResponse(final Response response) throws IOException
             {
                 String body = response.body().string();
+                try
+                {
+                    JSONObject jsonObject = new JSONObject(body);
+                    JSONArray inner = jsonObject.getJSONArray("weather");
+                    if (inner != null)
+                    {
+                        Log.v("testtag", "L:" + inner.length() + " " + inner.toString());
 
+
+                    }
+                }
+                catch (JSONException e)
+                {
+                    e.printStackTrace();
+                }
             }
         });
     }

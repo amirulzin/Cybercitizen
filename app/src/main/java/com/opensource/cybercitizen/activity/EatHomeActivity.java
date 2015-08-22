@@ -1,12 +1,13 @@
 package com.opensource.cybercitizen.activity;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.util.ArrayMap;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,74 +20,67 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.opensource.cybercitizen.R;
 import com.opensource.cybercitizen.base.RecyclerHomeBaseActivity;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 public class EatHomeActivity extends RecyclerHomeBaseActivity
 {
-    private final ArrayMap<EatItem, Integer> mEatItems = new ArrayMap<>();
+    private final List<EatItem> mEatItems = new ArrayList<>();
     private final String ACTIVITY_MAIN_TITLE = "Eat";
 
     private RecyclerView.Adapter<EatItem.EatItemViewHolder> mRecyclerAdapter = new RecyclerView.Adapter<EatItem.EatItemViewHolder>()
     {
         @Override
-        public int getItemViewType(final int position)
-        {
-            return mEatItems.valueAt(position);
-        }
-
-        @Override
         public EatItem.EatItemViewHolder onCreateViewHolder(final ViewGroup parent, final int viewType)
         {
             final View itemView = LayoutInflater.from(EatHomeActivity.this).inflate(EatItem.EatItemViewHolder.getLayoutRes(), parent, false);
-            if (viewType == EatItem.VIEWTYPE_COMPACT)
-                return new EatItem.EatItemViewHolder(itemView);
-            else
-                return new EatItem.EatItemViewHolder.ExpandedView(itemView);
+            return new EatItem.EatItemViewHolder(itemView);
         }
 
         @Override
         public void onBindViewHolder(final EatItem.EatItemViewHolder holder, final int position)
         {
 
-            final EatItem eatItem = mEatItems.keyAt(position);
-            if (holder instanceof EatItem.EatItemViewHolder.ExpandedView)
+            final EatItem eatItem = mEatItems.get(position);
+
+
+            holder.setOnClickCallback(new View.OnClickListener()
             {
-                final EatItem.EatItemViewHolder.ExpandedView expandedHolder = (EatItem.EatItemViewHolder.ExpandedView) holder;
-
-                expandedHolder.setOnClickCallback(new View.OnClickListener()
+                @Override
+                public void onClick(final View v)
                 {
-                    @Override
-                    public void onClick(final View v)
-                    {
-                        Log.v("EXPANDED", "POS" + position);
-                        if (v.getId() == R.id.li_eh_baseview)
-                        {
-                            eatItem.setExpanded(false);
-                            notifyItemChanged(position);
-                        }
+                    launchDialog(eatItem, getContentContainer());
 
-                    }
-                });
-
-                expandedHolder.bindData(eatItem, EatHomeActivity.this);
-            }
-            else
-            {
-
-                holder.setOnClickCallback(new View.OnClickListener()
-                {
-                    @Override
-                    public void onClick(final View v)
-                    {
-                        Log.v("COMPACT", "POS" + position);
-                        if (v.getId() == R.id.li_eh_baseview)
-                        {
-                            eatItem.setExpanded(false);
-                            notifyItemChanged(position);
-                        }
-                    }
-                });
-
-                holder.bindData(eatItem, EatHomeActivity.this);
-            }
+                }
+            });
+//            if (holder instanceof EatItem.EatItemViewHolder.ExpandedView)
+//            {
+//                final EatItem.EatItemViewHolder.ExpandedView expandedHolder = (EatItem.EatItemViewHolder.ExpandedView) holder;
+//
+//                expandedHolder.setOnClickCallback(new View.OnClickListener()
+//                {
+//                    @Override
+//                    public void onClick(final View v)
+//                    {
+//                        Log.v("EXPANDED", "POS" + position);
+//                        if (v.getId() == R.id.li_eh_baseview)
+//                        {
+//                            eatItem.setExpanded(false);
+//                            notifyItemChanged(position);
+//                        }
+//
+//                    }
+//                });
+//
+//                expandedHolder.bindData(eatItem, EatHomeActivity.this);
+//            }
+//            else
+//            {
+//
+//
+//            }
+            holder.bindData(eatItem, EatHomeActivity.this);
 
         }
 
@@ -107,10 +101,12 @@ public class EatHomeActivity extends RecyclerHomeBaseActivity
 
         final EatItem pizzaHut = new EatItem("http://i.imgur.com/NpzwdWP.png", "Pizza Hut").setCongestion(10).setWifiAvailable(false);
 
-        mEatItems.put(kfc, kfc.getExpanded());
-        mEatItems.put(mcD, mcD.getExpanded());
-        mEatItems.put(starbucks, starbucks.getExpanded());
-        mEatItems.put(pizzaHut, pizzaHut.getExpanded());
+        mEatItems.addAll(Arrays.asList(kfc, starbucks, mcD, pizzaHut));
+
+//        mEatItems.put(kfc, kfc.getExpanded());
+//        mEatItems.put(mcD, mcD.getExpanded());
+//        mEatItems.put(starbucks, starbucks.getExpanded());
+//        mEatItems.put(pizzaHut, pizzaHut.getExpanded());
     }
 
 
@@ -122,6 +118,18 @@ public class EatHomeActivity extends RecyclerHomeBaseActivity
         final RecyclerView recyclerView = getRecyclerView();
         recyclerView.setAdapter(mRecyclerAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(EatHomeActivity.this, LinearLayoutManager.VERTICAL, false));
+
+        Glide.with(this).load(R.raw.eat_header).into(getHeaderImageView());
+        final Drawable drawable;
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP_MR1)
+        {
+            drawable = getResources().getDrawable(R.drawable.gradient_shadow_top);
+        }
+        else
+            drawable = getResources().getDrawable(R.drawable.gradient_shadow_top, getTheme());
+
+        getCollapsingToolbarLayout().setForeground(drawable);
+
     }
 
     @Override
@@ -130,10 +138,18 @@ public class EatHomeActivity extends RecyclerHomeBaseActivity
         return R.menu.menu_drawer;
     }
 
+    public void launchDialog(EatItem eatItem, ViewGroup parent)
+    {
+        View view = LayoutInflater.from(this).inflate(R.layout.listitem_eathome_expanded, parent, false);
+        EatItem.ExpandedView expandedView = new EatItem.ExpandedView(view);
+        expandedView.bindData(eatItem, this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this).setView(view).setPositiveButton("I'M COMING", null).setNeutralButton("DISMISS", null);
+        builder.show();
+    }
+
     public static class EatItem
     {
-        public static final int VIEWTYPE_COMPACT = 0;
-        public static final int VIEWTYPE_EXPANDED = 1;
+
         String imageUri;
         String header;
         String wifistatus;
@@ -165,13 +181,6 @@ public class EatHomeActivity extends RecyclerHomeBaseActivity
         public boolean isExpanded()
         {
             return this.expanded;
-        }
-
-        public int getExpanded()
-        {
-            if (expanded)
-                return VIEWTYPE_EXPANDED;
-            else return VIEWTYPE_COMPACT;
         }
 
         public void setExpanded(boolean expanded)
@@ -251,6 +260,15 @@ public class EatHomeActivity extends RecyclerHomeBaseActivity
 
         public static class EatItemViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener
         {
+//            public static final int VIEWTYPE_COMPACT = 0;
+//            public static final int VIEWTYPE_EXPANDED = 1;
+//            public int getExpanded()
+//            {
+//                if (expanded)
+//                    return VIEWTYPE_EXPANDED;
+//                else return VIEWTYPE_COMPACT;
+//            }
+
             private static final int LAYOUT_RES = R.layout.listitem_eathome;
             private ImageView mImageView;
             private TextView mHeader, mWifistatus, mPromo, mCongestion;
@@ -358,34 +376,34 @@ public class EatHomeActivity extends RecyclerHomeBaseActivity
                 if (onClickCallback != null)
                     onClickCallback.onClick(v);
             }
+        }
 
-            public static class ExpandedView extends EatItemViewHolder
+        public static class ExpandedView extends EatItemViewHolder
+        {
+            ImageButton walk, car, bus, taxi;
+            TextView tags;
+
+            public ExpandedView(final View itemView)
             {
-                ImageButton walk, car, bus, taxi;
-                TextView tags;
-
-                public ExpandedView(final View itemView)
-                {
-                    super(itemView);
-                    walk = (ImageButton) itemView.findViewById(R.id.li_ehe_walk);
-                    car = (ImageButton) itemView.findViewById(R.id.li_ehe_car);
-                    bus = (ImageButton) itemView.findViewById(R.id.li_ehe_bus);
-                    taxi = (ImageButton) itemView.findViewById(R.id.li_ehe_taxi);
-                    tags = (TextView) itemView.findViewById(R.id.li_ehe_tags);
-                }
-
-                @Override
-                public void bindData(final EatItem eatItem, final Context context)
-                {
-                    super.bindData(eatItem, context);
-
-                    taxi.setOnClickListener(ExpandedView.this);
-                    walk.setOnClickListener(ExpandedView.this);
-                    car.setOnClickListener(ExpandedView.this);
-                    bus.setOnClickListener(ExpandedView.this);
-                }
-
+                super(itemView);
+                walk = (ImageButton) itemView.findViewById(R.id.li_ehe_walk);
+                car = (ImageButton) itemView.findViewById(R.id.li_ehe_car);
+                bus = (ImageButton) itemView.findViewById(R.id.li_ehe_bus);
+                taxi = (ImageButton) itemView.findViewById(R.id.li_ehe_taxi);
+                tags = (TextView) itemView.findViewById(R.id.li_ehe_tags);
             }
+
+            @Override
+            public void bindData(final EatItem eatItem, final Context context)
+            {
+                super.bindData(eatItem, context);
+
+                taxi.setOnClickListener(ExpandedView.this);
+                walk.setOnClickListener(ExpandedView.this);
+                car.setOnClickListener(ExpandedView.this);
+                bus.setOnClickListener(ExpandedView.this);
+            }
+
         }
     }
 

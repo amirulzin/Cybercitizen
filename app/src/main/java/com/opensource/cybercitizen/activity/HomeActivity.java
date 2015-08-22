@@ -1,6 +1,8 @@
 package com.opensource.cybercitizen.activity;
 
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.ColorInt;
 import android.support.annotation.NonNull;
@@ -14,15 +16,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.opensource.common.ui.BaseDrawerActivity;
+import com.bumptech.glide.Glide;
 import com.opensource.common.ui.GridItemDecoration;
 import com.opensource.cybercitizen.R;
+import com.opensource.cybercitizen.base.RecyclerHomeBaseActivity;
+import com.opensource.cybercitizen.controller.Weather;
 import com.opensource.util.Util;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class HomeActivity extends BaseDrawerActivity
+public class HomeActivity extends RecyclerHomeBaseActivity
 {
     private final List<HomeListItem> mHomeListItems = new ArrayList<>(16);
     private RecyclerView.Adapter<HomeListItem.ViewHolder> mRecyclerViewAdapter = new RecyclerView.Adapter<HomeListItem.ViewHolder>()
@@ -51,13 +55,19 @@ public class HomeActivity extends BaseDrawerActivity
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        View parent = inflateContent(R.layout.layout_base_recycler_collapsible);
-        setupItems(mHomeListItems);
-        setupView(parent, savedInstanceState);
+        init();
     }
 
-    private void setupView(final View baseLayout, final Bundle savedInstanceState)
+    public void init()
     {
+        Weather weather = new Weather();
+        weather.getWeather();
+    }
+
+    @Override
+    public void setupView(final Bundle savedInstanceState, final View baseLayout)
+    {
+        setupItems(mHomeListItems);
         Toolbar toolbar = (Toolbar) findViewById(R.id.lbnc_toolbar);
         if (toolbar != null)
         {
@@ -81,6 +91,17 @@ public class HomeActivity extends BaseDrawerActivity
             recyclerView.addItemDecoration(new GridItemDecoration(HomeActivity.this, 2, 4));
 
         }
+
+        Glide.with(this).load(R.raw.sunny).into(getHeaderImageView());
+        final Drawable drawable;
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP_MR1)
+        {
+            drawable = getResources().getDrawable(R.drawable.gradient_shadow_top);
+        }
+        else
+            drawable = getResources().getDrawable(R.drawable.gradient_shadow_top, getTheme());
+
+        getCollapsingToolbarLayout().setForeground(drawable);
     }
 
     private void setupItems(final List<HomeListItem> homeListItems)

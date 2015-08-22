@@ -35,6 +35,7 @@
                 android:id="@+id/li_eh_header"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="4dp"
                 android:layout_toRightOf="@id/li_eh_image"
                 android:clickable="true"
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Subhead"
@@ -43,7 +44,7 @@
 
             <LinearLayout
                 android:id="@+id/li_ehe_btncontainer"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/li_eh_header"
                 android:layout_toRightOf="@id/li_eh_image"
@@ -52,29 +53,33 @@
 
                 <ImageButton
                     android:id="@+id/li_ehe_walk"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:backgroundTint="?attr/colorAccent"
                     android:src="@drawable/ic_action_directions_run" />
 
                 <ImageButton
                     android:id="@+id/li_ehe_car"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:backgroundTint="?attr/colorAccent"
                     android:src="@drawable/ic_action_directions_car" />
 
                 <ImageButton
                     android:id="@+id/li_ehe_bus"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:backgroundTint="?attr/colorAccent"
                     android:src="@drawable/ic_action_directions_bus" />
 
                 <ImageButton
                     android:id="@+id/li_ehe_taxi"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:backgroundTint="?attr/colorAccent"
                     android:src="@drawable/ic_action_local_taxi" />
 
@@ -89,30 +94,57 @@
             android:layout_marginTop="2dp"
             android:background="@color/shadow_25" />
 
-        <TextView
-            android:id="@+id/li_eh_wifistatus"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            tools:text="Wifi Available" />
-
-        <TextView
-            android:id="@+id/li_eh_promo"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/colorTextAlert"
-            tools:text="Lunch hour promo" />
-
-        <TextView
-            android:id="@+id/li_eh_congestion"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            tools:text="10% congestion" />
-
-        <TextView
-            android:id="@+id/li_ehe_tags"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Coffee Cake" />
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/li_eh_wifistatus"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    tools:text="Wifi Available" />
+
+                <TextView
+                    android:id="@+id/li_eh_promo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/colorTextAlert"
+                    tools:text="Lunch hour promo" />
+
+                <TextView
+                    android:id="@+id/li_eh_congestion"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    tools:text="10% congestion" />
+
+                <TextView
+                    android:id="@+id/li_ehe_tags"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Coffee Cake" />
+
+            </LinearLayout>
+
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:minWidth="8dp" />
+
+            <FrameLayout
+                android:id="@+id/li_eh_mapfragment"
+                android:layout_width="128dp"
+                android:layout_height="128dp">
+
+            </FrameLayout>
+        </LinearLayout>
+
     </LinearLayout>
 
 

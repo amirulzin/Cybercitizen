@@ -7,10 +7,9 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ImageView;
 
-import com.opensource.common.ui.BaseDrawerActivity;
 import com.opensource.cybercitizen.R;
 
-public abstract class RecyclerHomeBaseActivity extends BaseDrawerActivity
+public abstract class RecyclerHomeBaseActivity extends SpecialIntermediateActivity
 {
     private RecyclerView mRecyclerView;
     private CollapsingToolbarLayout mCollapsingToolbarLayout;

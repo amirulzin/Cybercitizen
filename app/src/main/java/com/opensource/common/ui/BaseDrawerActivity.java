@@ -16,6 +16,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 
 import com.opensource.cybercitizen.R;
 
@@ -24,6 +25,23 @@ public abstract class BaseDrawerActivity extends AppCompatActivity
     private DrawerLayout mDrawerLayout;
     private FrameLayout mFrameLayout;
     private ActionBarDrawerToggle mDrawerToggle;
+    private ImageView mNavHeaderImageView;
+    private NavigationView mNavigationView;
+
+    public ImageView getNavHeaderImageView()
+    {
+        return mNavHeaderImageView;
+    }
+
+    public NavigationView getNavigationView()
+    {
+        return mNavigationView;
+    }
+
+    public ActionBarDrawerToggle getDrawerToggle()
+    {
+        return mDrawerToggle;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -41,8 +59,8 @@ public abstract class BaseDrawerActivity extends AppCompatActivity
     {
         mDrawerLayout = (DrawerLayout) findViewById(R.id.lbd_drawerlayout);
         mFrameLayout = (FrameLayout) findViewById(R.id.lbd_contentcontainer);
-        final NavigationView navigationView = (NavigationView) findViewById(R.id.lbd_navigationview);
-        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener()
+        mNavigationView = (NavigationView) findViewById(R.id.lbd_navigationview);
+        mNavigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener()
         {
             @Override
             public boolean onNavigationItemSelected(MenuItem menuItem)
@@ -56,6 +74,7 @@ public abstract class BaseDrawerActivity extends AppCompatActivity
                 return false;
             }
         });
+        mNavHeaderImageView = (ImageView) mNavigationView.findViewById(R.id.lnh_headerimage);
     }
 
     /**
