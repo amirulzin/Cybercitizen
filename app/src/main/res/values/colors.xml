@@ -6,7 +6,7 @@
 
     <color name="colorPrimary">@color/teal_600</color>
     <color name="colorPrimaryDark">@color/teal_700</color>
-    <color name="colorAccent">@color/indigo_400</color>
+    <color name="colorAccent">#FFFD3365</color>
     <color name="colorControlNormal">@color/pink_A700</color>
     <color name="colorTextLightInverse">@color/black</color>
     <color name="colorTextDarkInverse">@color/white</color>

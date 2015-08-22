@@ -16,17 +16,22 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".HomeActivity"
-            android:label="@string/app_name">
+            android:label="@string/app_name" />
+
+
+        <activity
+            android:name=".EatHomeActivity"
+            android:label="Eat" />
+
+        <activity
+            android:name="com.opensource.common.ui.LoginActivity"
+            android:label="Login">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".EatHomeActivity"
-            android:label="Eat" />
-
         <!-- MAPS API KEY: AIzaSyBam_Gd3lTLyl2Hcx0soWlFKypxJbv_cnI -->
         <meta-data
             android:name="com.google.android.geo.AIzaSyBam_Gd3lTLyl2Hcx0soWlFKypxJbv_cnI"
