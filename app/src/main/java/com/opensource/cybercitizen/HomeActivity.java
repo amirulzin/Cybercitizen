@@ -1,5 +1,6 @@
 package com.opensource.cybercitizen;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.ColorInt;
 import android.support.annotation.NonNull;
@@ -23,7 +24,6 @@ import java.util.List;
 
 public class HomeActivity extends BaseDrawerActivity
 {
-
     private final List<HomeListItem> mHomeListItems = new ArrayList<>(16);
     private RecyclerView.Adapter<HomeListItem.ViewHolder> mRecyclerViewAdapter = new RecyclerView.Adapter<HomeListItem.ViewHolder>()
     {
@@ -85,7 +85,16 @@ public class HomeActivity extends BaseDrawerActivity
     private void setupItems(final List<HomeListItem> homeListItems)
     {
         homeListItems.add(new HomeListItem("Shop", 25, getResources().getColor(R.color.teal_A200)));
-        homeListItems.add(new HomeListItem("Eat", 12, getResources().getColor(R.color.indigo_A200)));
+        final HomeListItem eat = new HomeListItem("Eat", 12, getResources().getColor(R.color.indigo_A200));
+        eat.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(final View v)
+            {
+                startActivity(new Intent(HomeActivity.this, EatHomeActivity.class));
+            }
+        });
+        homeListItems.add(eat);
         homeListItems.add(new HomeListItem("Health", 3, getResources().getColor(R.color.light_green_A200)));
 
         homeListItems.add(new HomeListItem("Travel", 8, getResources().getColor(R.color.orange_A200)));

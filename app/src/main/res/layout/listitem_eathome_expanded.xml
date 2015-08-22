@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="8dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/li_eh_image"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            tools:background="?attr/colorPrimary" />
+
+        <TextView
+            android:id="@+id/li_eh_header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:text="Starbucks" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="BUS" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/li_eh_congestion"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        tools:text="10% congestion" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/li_eh_wifistatus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="Wifi Available" />
+
+            <TextView
+                android:id="@+id/li_eh_promo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:text="Lunch hour promo" />
+        </LinearLayout>
+
+
+    </LinearLayout>
+</LinearLayout>
