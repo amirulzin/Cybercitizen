@@ -56,43 +56,6 @@ public class HomeActivity extends BaseDrawerActivity
         setupView(parent, savedInstanceState);
     }
 
-//
-//    {
-//        GridView gridView = (GridView) LayoutInflater.from(this).inflate(R.layout.layout_home, nestedScrollView, false);
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-//            gridView.setNestedScrollingEnabled(true);
-//        }
-//        ArrayAdapter<HomeListItem> mHomeListItemArrayAdapter = new ArrayAdapter<HomeListItem>(this, HomeListItem.ViewHolder.getLayoutRes(), R.id.li_h_title, mHomeListItems)
-//        {
-//            @Override
-//            public View getView(final int position, View convertView, final ViewGroup parent)
-//            {
-//                //TODO use viewholder
-//                final HomeListItem.ViewHolder viewHolder;
-//
-//                if (convertView == null)
-//                {
-//                    convertView = LayoutInflater.from(HomeActivity.this).inflate(HomeListItem.ViewHolder.getLayoutRes(), parent, false);
-//                    viewHolder = new HomeListItem.ViewHolder(convertView);
-//                    convertView.setTag(viewHolder);
-//                }
-//                else
-//                {
-//                    viewHolder = (HomeListItem.ViewHolder) convertView.getTag();
-//                }
-//
-//                viewHolder.bindData(getItem(position));
-//
-//                //return super.getView(position, convertView, parent);
-//                return convertView;
-//            }
-//        };
-//
-//        gridView.setAdapter(mHomeListItemArrayAdapter);
-//
-//        nestedScrollView.addView(gridView);
-//    }
-
     private void setupView(final View baseLayout, final Bundle savedInstanceState)
     {
         Toolbar toolbar = (Toolbar) findViewById(R.id.lbnc_toolbar);
