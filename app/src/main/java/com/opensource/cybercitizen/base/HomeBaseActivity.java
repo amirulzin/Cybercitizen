@@ -1,4 +1,4 @@
-package com.opensource.cybercitizen;
+package com.opensource.cybercitizen.base;
 
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.ImageView;
 
 import com.opensource.common.ui.BaseDrawerActivity;
+import com.opensource.cybercitizen.R;
 
 public abstract class HomeBaseActivity extends BaseDrawerActivity
 {

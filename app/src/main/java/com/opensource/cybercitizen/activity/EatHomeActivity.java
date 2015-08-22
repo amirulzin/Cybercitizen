@@ -1,4 +1,4 @@
-package com.opensource.cybercitizen;
+package com.opensource.cybercitizen.activity;
 
 import android.content.Context;
 import android.os.AsyncTask;
@@ -14,6 +14,8 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.opensource.cybercitizen.R;
+import com.opensource.cybercitizen.base.HomeBaseActivity;
 
 import java.util.ArrayList;
 import java.util.Arrays;

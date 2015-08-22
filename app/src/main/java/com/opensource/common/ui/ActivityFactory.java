@@ -3,8 +3,8 @@ package com.opensource.common.ui;
 import android.content.Context;
 import android.content.Intent;
 
-import com.opensource.cybercitizen.HomeActivity;
 import com.opensource.cybercitizen.R;
+import com.opensource.cybercitizen.activity.HomeActivity;
 
 public final class ActivityFactory
 {

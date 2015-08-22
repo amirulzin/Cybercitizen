@@ -15,17 +15,15 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".HomeActivity"
+            android:name=".activity.HomeActivity"
             android:label="@string/app_name" />
-
-
         <activity
-            android:name=".EatHomeActivity"
+            android:name=".activity.EatHomeActivity"
             android:label="Eat" />
 
         <activity
             android:name="com.opensource.common.ui.LoginActivity"
-            android:label="Login">
+            android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

@@ -1,4 +1,4 @@
-package com.opensource.cybercitizen;
+package com.opensource.cybercitizen.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,15 +9,15 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.opensource.common.ui.BaseDrawerActivity;
-import com.opensource.common.ui.GridItemSetting;
-import com.opensource.common.ui.MarginItemDecoration;
+import com.opensource.common.ui.GridItemDecoration;
+import com.opensource.cybercitizen.R;
+import com.opensource.util.Util;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -66,18 +66,19 @@ public class HomeActivity extends BaseDrawerActivity
         CollapsingToolbarLayout collapsingToolbar = (CollapsingToolbarLayout) baseLayout.findViewById(R.id.lbnc_collapsingtoolbar);
         if (collapsingToolbar != null)
         {
-            collapsingToolbar.setTitle("What I want to do today");
+            collapsingToolbar.setTitle("Cybercitizen");
         }
 
         RecyclerView recyclerView = (RecyclerView) baseLayout.findViewById(R.id.lbnc_recyclerview);
         if (recyclerView != null)
         {
             final GridLayoutManager gridLayoutManager = new GridLayoutManager(HomeActivity.this, 2, LinearLayoutManager.VERTICAL, false);
-            final DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
-            GridItemSetting gridItemSetting = new GridItemSetting(displayMetrics.density, displayMetrics.widthPixels, 160, 1f, 0);
-            recyclerView.addItemDecoration(new MarginItemDecoration(0, gridItemSetting.getColumnCount()));
             recyclerView.setLayoutManager(gridLayoutManager);
             recyclerView.setAdapter(mRecyclerViewAdapter);
+            recyclerView.setClipToPadding(false);
+            int paddingPx = Util.dpToPx(HomeActivity.this, 4);
+            recyclerView.setPadding(paddingPx, paddingPx, paddingPx, paddingPx);
+            recyclerView.addItemDecoration(new GridItemDecoration(HomeActivity.this, 2, 4));
 
         }
     }

@@ -12,6 +12,7 @@
 
 package com.opensource.common.ui;
 
+import android.content.Context;
 import android.graphics.Rect;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -24,6 +25,11 @@ public class MarginItemDecoration extends RecyclerView.ItemDecoration
     private final int marginPixel;
     private int gridSpanCount = 1;
     private int adjustedSideMargin;
+
+    public MarginItemDecoration(Context context, int dp)
+    {
+        marginPixel = (int) (context.getResources().getDisplayMetrics().density * dp);
+    }
 
     /**
      * Use this constructor for vertical linear RecyclerViews
