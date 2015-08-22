@@ -10,7 +10,7 @@ import android.widget.ImageView;
 import com.opensource.common.ui.BaseDrawerActivity;
 import com.opensource.cybercitizen.R;
 
-public abstract class HomeBaseActivity extends BaseDrawerActivity
+public abstract class RecyclerHomeBaseActivity extends BaseDrawerActivity
 {
     private RecyclerView mRecyclerView;
     private CollapsingToolbarLayout mCollapsingToolbarLayout;
@@ -26,7 +26,7 @@ public abstract class HomeBaseActivity extends BaseDrawerActivity
     protected void onCreate(final Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        final View view = inflateContent(R.layout.layout_base_nested_collapsible);
+        final View view = inflateContent(R.layout.layout_base_recycler_collapsible);
         innerSetupViews(view);
         setupView(savedInstanceState, view);
     }

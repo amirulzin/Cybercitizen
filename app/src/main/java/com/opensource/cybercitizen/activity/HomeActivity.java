@@ -51,7 +51,7 @@ public class HomeActivity extends BaseDrawerActivity
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        View parent = inflateContent(R.layout.layout_base_nested_collapsible);
+        View parent = inflateContent(R.layout.layout_base_recycler_collapsible);
         setupItems(mHomeListItems);
         setupView(parent, savedInstanceState);
     }
@@ -168,14 +168,16 @@ public class HomeActivity extends BaseDrawerActivity
             return this;
         }
 
-        public static class ViewHolder extends RecyclerView.ViewHolder
+        public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener
         {
             private static final int VIEWHOLDER_TAG = 1942;
             private static final int LAYOUT_RES = R.layout.listitem_home;
-
             private final TextView mTitle;
             private final TextView mItemCount;
             private final View mColorView;
+            private final View mBaseView;
+            private View.OnClickListener mOnClickListener;
+
 
             public ViewHolder(final View itemView)
             {
@@ -183,8 +185,10 @@ public class HomeActivity extends BaseDrawerActivity
                 mTitle = (TextView) itemView.findViewById(R.id.li_h_title);
                 mItemCount = (TextView) itemView.findViewById(R.id.li_h_itemscount);
                 mColorView = itemView.findViewById(R.id.li_h_barcolor);
-            }
+                mBaseView = itemView.findViewById(R.id.li_h_baselayout);
 
+                itemView.setOnClickListener(this);
+            }
 
             public static int getLayoutRes()
             {
@@ -203,8 +207,15 @@ public class HomeActivity extends BaseDrawerActivity
                 mColorView.setBackgroundColor(homeListItem.getColor());
                 if (homeListItem.getOnClickListener() != null)
                 {
-                    ((View) mTitle.getParent()).setOnClickListener(homeListItem.getOnClickListener());
+                    mOnClickListener = homeListItem.getOnClickListener();
                 }
+            }
+
+            @Override
+            public void onClick(final View v)
+            {
+                if (mOnClickListener != null)
+                    mOnClickListener.onClick(v);
             }
         }
 

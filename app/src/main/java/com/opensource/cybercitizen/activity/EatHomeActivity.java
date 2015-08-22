@@ -3,41 +3,91 @@ package com.opensource.cybercitizen.activity;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.util.ArrayMap;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.opensource.cybercitizen.R;
-import com.opensource.cybercitizen.base.HomeBaseActivity;
+import com.opensource.cybercitizen.base.RecyclerHomeBaseActivity;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-public class EatHomeActivity extends HomeBaseActivity
+public class EatHomeActivity extends RecyclerHomeBaseActivity
 {
-    private final List<EatItem> mEatItems = new ArrayList<>(128);
-    private final String ACTIVITY_MAIN_TITLE = "EAT";
-    private RecyclerView.Adapter<EatItem.ViewHolder> mRecyclerAdapter = new RecyclerView.Adapter<EatItem.ViewHolder>()
+    private final ArrayMap<EatItem, Integer> mEatItems = new ArrayMap<>();
+    private final String ACTIVITY_MAIN_TITLE = "Eat";
+
+    private RecyclerView.Adapter<EatItem.EatItemViewHolder> mRecyclerAdapter = new RecyclerView.Adapter<EatItem.EatItemViewHolder>()
     {
         @Override
-        public EatItem.ViewHolder onCreateViewHolder(final ViewGroup parent, final int viewType)
+        public int getItemViewType(final int position)
         {
-            return new EatItem.ViewHolder(LayoutInflater.from(EatHomeActivity.this).inflate(EatItem.ViewHolder.getLayoutRes(), parent, false));
+            return mEatItems.valueAt(position);
         }
 
         @Override
-        public void onBindViewHolder(final EatItem.ViewHolder holder, final int position)
+        public EatItem.EatItemViewHolder onCreateViewHolder(final ViewGroup parent, final int viewType)
         {
-            Log.d(ACTIVITY_MAIN_TITLE, " loading item " + position);
-            holder.bindData(mEatItems.get(position), EatHomeActivity.this);
+            final View itemView = LayoutInflater.from(EatHomeActivity.this).inflate(EatItem.EatItemViewHolder.getLayoutRes(), parent, false);
+            if (viewType == EatItem.VIEWTYPE_COMPACT)
+                return new EatItem.EatItemViewHolder(itemView);
+            else
+                return new EatItem.EatItemViewHolder.ExpandedView(itemView);
+        }
+
+        @Override
+        public void onBindViewHolder(final EatItem.EatItemViewHolder holder, final int position)
+        {
+
+            final EatItem eatItem = mEatItems.keyAt(position);
+            if (holder instanceof EatItem.EatItemViewHolder.ExpandedView)
+            {
+                final EatItem.EatItemViewHolder.ExpandedView expandedHolder = (EatItem.EatItemViewHolder.ExpandedView) holder;
+
+                expandedHolder.setOnClickCallback(new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(final View v)
+                    {
+                        Log.v("EXPANDED", "POS" + position);
+                        if (v.getId() == R.id.li_eh_baseview)
+                        {
+                            eatItem.setExpanded(false);
+                            notifyItemChanged(position);
+                        }
+
+                    }
+                });
+
+                expandedHolder.bindData(eatItem, EatHomeActivity.this);
+            }
+            else
+            {
+
+                holder.setOnClickCallback(new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(final View v)
+                    {
+                        Log.v("COMPACT", "POS" + position);
+                        if (v.getId() == R.id.li_eh_baseview)
+                        {
+                            eatItem.setExpanded(false);
+                            notifyItemChanged(position);
+                        }
+                    }
+                });
+
+                holder.bindData(eatItem, EatHomeActivity.this);
+            }
+
         }
 
         @Override
@@ -57,7 +107,10 @@ public class EatHomeActivity extends HomeBaseActivity
 
         final EatItem pizzaHut = new EatItem("http://i.imgur.com/NpzwdWP.png", "Pizza Hut").setCongestion(10).setWifiAvailable(false);
 
-        mEatItems.addAll(Arrays.asList(kfc, mcD, starbucks, pizzaHut));
+        mEatItems.put(kfc, kfc.getExpanded());
+        mEatItems.put(mcD, mcD.getExpanded());
+        mEatItems.put(starbucks, starbucks.getExpanded());
+        mEatItems.put(pizzaHut, pizzaHut.getExpanded());
     }
 
 
@@ -79,12 +132,15 @@ public class EatHomeActivity extends HomeBaseActivity
 
     public static class EatItem
     {
+        public static final int VIEWTYPE_COMPACT = 0;
+        public static final int VIEWTYPE_EXPANDED = 1;
         String imageUri;
         String header;
         String wifistatus;
         String congestion;
         String promo;
         int timedPromo = -1;
+        boolean expanded = false;
         private boolean mWifiAvailable = false;
 
         public EatItem(final String imageUri, final String header)
@@ -92,7 +148,6 @@ public class EatHomeActivity extends HomeBaseActivity
             this.imageUri = imageUri;
             this.header = header;
         }
-
 
         public EatItem(final String imageUri, final String header, final String wifistatus, final String congestion, final String promo)
         {
@@ -105,6 +160,23 @@ public class EatHomeActivity extends HomeBaseActivity
 
         public EatItem()
         {
+        }
+
+        public boolean isExpanded()
+        {
+            return this.expanded;
+        }
+
+        public int getExpanded()
+        {
+            if (expanded)
+                return VIEWTYPE_EXPANDED;
+            else return VIEWTYPE_COMPACT;
+        }
+
+        public void setExpanded(boolean expanded)
+        {
+            this.expanded = expanded;
         }
 
         public int getTimedPromo()
@@ -177,14 +249,15 @@ public class EatHomeActivity extends HomeBaseActivity
             return this;
         }
 
-        public static class ViewHolder extends RecyclerView.ViewHolder
+        public static class EatItemViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener
         {
             private static final int LAYOUT_RES = R.layout.listitem_eathome;
             private ImageView mImageView;
             private TextView mHeader, mWifistatus, mPromo, mCongestion;
             private EatItem mEatItem;
+            private View.OnClickListener onClickCallback;
 
-            public ViewHolder(final View itemView)
+            public EatItemViewHolder(final View itemView)
             {
                 super(itemView);
                 mImageView = (ImageView) itemView.findViewById(R.id.li_eh_image);
@@ -193,11 +266,17 @@ public class EatHomeActivity extends HomeBaseActivity
                 mPromo = (TextView) itemView.findViewById(R.id.li_eh_promo);
                 mCongestion = (TextView) itemView.findViewById(R.id.li_eh_congestion);
 
+                itemView.setOnClickListener(this);
             }
 
             public static int getLayoutRes()
             {
                 return LAYOUT_RES;
+            }
+
+            public void setOnClickCallback(final View.OnClickListener onClickCallback)
+            {
+                this.onClickCallback = onClickCallback;
             }
 
             public void bindData(EatItem eatItem, Context context)
@@ -218,6 +297,7 @@ public class EatHomeActivity extends HomeBaseActivity
 
                 mPromo.setText(eatItem.getPromo());
                 mCongestion.setText(eatItem.getCongestion());
+
             }
 
             public void startTimer()
@@ -270,6 +350,40 @@ public class EatHomeActivity extends HomeBaseActivity
                     }
                 };
                 asyncTask.execute(mEatItem.getTimedPromo());
+            }
+
+            @Override
+            public void onClick(final View v)
+            {
+                if (onClickCallback != null)
+                    onClickCallback.onClick(v);
+            }
+
+            public static class ExpandedView extends EatItemViewHolder
+            {
+                ImageButton walk, car, bus, taxi;
+                TextView tags;
+
+                public ExpandedView(final View itemView)
+                {
+                    super(itemView);
+                    walk = (ImageButton) itemView.findViewById(R.id.li_ehe_walk);
+                    car = (ImageButton) itemView.findViewById(R.id.li_ehe_car);
+                    bus = (ImageButton) itemView.findViewById(R.id.li_ehe_bus);
+                    taxi = (ImageButton) itemView.findViewById(R.id.li_ehe_taxi);
+                    tags = (TextView) itemView.findViewById(R.id.li_ehe_tags);
+                }
+
+                @Override
+                public void bindData(final EatItem eatItem, final Context context)
+                {
+                    super.bindData(eatItem, context);
+
+                    taxi.setOnClickListener(ExpandedView.this);
+                    walk.setOnClickListener(ExpandedView.this);
+                    car.setOnClickListener(ExpandedView.this);
+                    bus.setOnClickListener(ExpandedView.this);
+                }
 
             }
         }

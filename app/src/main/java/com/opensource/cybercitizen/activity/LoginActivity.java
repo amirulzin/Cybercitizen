@@ -1,4 +1,4 @@
-package com.opensource.common.ui;
+package com.opensource.cybercitizen.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,7 +9,6 @@ import android.widget.ImageView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.opensource.cybercitizen.R;
-import com.opensource.cybercitizen.activity.HomeActivity;
 
 public class LoginActivity extends AppCompatActivity
 {
