@@ -130,6 +130,7 @@ public class EatDialogActivity extends AppCompatActivity implements OnMapReadyCa
 
     }
 
+
     private void unbind()
     {
         //getSupportFragmentManager().beginTransaction().remove(mMapFragment).commit();
@@ -212,7 +213,7 @@ public class EatDialogActivity extends AppCompatActivity implements OnMapReadyCa
             LatLng latLng = mEatItem.getLatLng();
             if (latLng != null)
             {
-                googleMap.addMarker(new MarkerOptions().position(latLng).snippet("Good weather for walking"));
+                googleMap.addMarker(new MarkerOptions().position(latLng).snippet(mEatItem.getHeader()));
             }
         }
     }
@@ -232,7 +233,7 @@ public class EatDialogActivity extends AppCompatActivity implements OnMapReadyCa
 
     public void launchMaps(View view)
     {
-        Uri data = Uri.parse("geo:" + mEatItem.getLatLng().latitude + "," + mEatItem.getLatLng().longitude);
+        Uri data = Uri.parse("geo:0,0?q=" + mEatItem.getLatLng().latitude + "," + mEatItem.getLatLng().longitude + "(" + mEatItem.getHeader() + ")");
 
 
         Intent intent = new Intent(Intent.ACTION_VIEW).setData(data);
