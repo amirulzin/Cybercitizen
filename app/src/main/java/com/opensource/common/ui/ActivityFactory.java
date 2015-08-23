@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 
 import com.opensource.cybercitizen.R;
+import com.opensource.cybercitizen.activity.EatHomeActivity;
 import com.opensource.cybercitizen.activity.HomeActivity;
 
 public final class ActivityFactory
@@ -15,8 +16,15 @@ public final class ActivityFactory
         {
             case R.id.md_nav_home:
                 intent.setClass(context, HomeActivity.class);
+                break;
+            case R.id.md_nav_eathome:
+                intent.setClass(context, EatHomeActivity.class);
+                break;
+            case R.id.md_nav_about:
+                intent = null;
         }
 
-        context.startActivity(intent);
+        if (intent != null)
+            context.startActivity(intent);
     }
 }

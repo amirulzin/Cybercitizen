@@ -147,10 +147,12 @@ public class EatDialogActivity extends AppCompatActivity implements OnMapReadyCa
                 String[] choiceArr = new String[]{"Might be a good day for quick stroll!", "The coast is clear!", "Somewhat cloudy with a chance of yummy meatballs"};
                 mSuggestion.setText(choiceArr[choice]);
             }
+            mSuggestion.setCompoundDrawables(walk.getDrawable(), null, null, null);
         }
         else if (id == car.getId())
         {
-            mSuggestion.setText("Nearest parking spot with available parking:\nPerhentian Cyberjaya (Terminal)");
+            mSuggestion.setText("Nearest parking spot with available parking:\nPerhentian Bas Cyberjaya (Terminal)");
+            mSuggestion.setCompoundDrawables(car.getDrawable(), null, null, null);
         }
         else if (id == bus.getId())
         {
@@ -168,6 +170,7 @@ public class EatDialogActivity extends AppCompatActivity implements OnMapReadyCa
             {
                 mSuggestion.setText("Going to work? Next DTS bus near your location will be arriving at " + dateFormat.format(calendar.getTime()));
             }
+            mSuggestion.setCompoundDrawables(bus.getDrawable(), null, null, null);
         }
         else if (id == taxi.getId())
         {
@@ -202,6 +205,8 @@ public class EatDialogActivity extends AppCompatActivity implements OnMapReadyCa
 
             builder.show();
 
+            mSuggestion.setCompoundDrawables(taxi.getDrawable(), null, null, null);
+
         }
     }
 
@@ -213,7 +218,7 @@ public class EatDialogActivity extends AppCompatActivity implements OnMapReadyCa
             LatLng latLng = mEatItem.getLatLng();
             if (latLng != null)
             {
-                googleMap.addMarker(new MarkerOptions().position(latLng).snippet(mEatItem.getHeader()));
+                googleMap.addMarker(new MarkerOptions().position(latLng).snippet(mEatItem.getHeader())).showInfoWindow();
             }
         }
     }
