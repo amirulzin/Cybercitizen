@@ -106,20 +106,25 @@ public class EatHomeActivity extends RecyclerHomeBaseActivity implements GoogleA
 
     public void setupList()
     {
-        final EatItem starbucks = new EatItem("http://i.imgur.com/ydXZcaU.png", "Starbucks").setCongestion(50).setWifiAvailable(true);
+        final EatItem secretRecipe = new EatItem("http://i.imgur.com/LWNkMtS.png", "Secret Recipe").setCongestion(42).setWifiAvailable(false).setLatLng(new LatLng(2.9232235, 101.6535586));
+
+        final EatItem matAyam = new EatItem("http://i.imgur.com/M94VSrh.png", "Restoran Mat Ayam Kampung").setCongestion(23).setWifiAvailable(false).setLatLng(new LatLng(2.9173249, 101.6501049)).setPromo("Lunch hour promotion\nEnding in 27 minutes");
+
+        final EatItem subway = new EatItem("http://i.imgur.com/GlNronD.png", "Subway").setCongestion(19).setWifiAvailable(true).setLatLng(new LatLng(2.9236703, 101.6613761));
+        final EatItem starbucks = new EatItem("http://i.imgur.com/ydXZcaU.png", "Starbucks").setCongestion(45).setWifiAvailable(true);
         starbucks.setLatLng(new LatLng(2.9212027, 101.655918));
 
-        final EatItem kfc = new EatItem("http://i.imgur.com/qSBRJw3.png", "Kentucky Fried Chicken").setCongestion(90).setWifiAvailable(true);
+        final EatItem kfc = new EatItem("http://i.imgur.com/qSBRJw3.png", "Kentucky Fried Chicken").setCongestion(75).setWifiAvailable(true);
         kfc.setLatLng(new LatLng(2.9207093, 101.659172));
 
-        final EatItem mcD = new EatItem("http://i.imgur.com/7GaUg0d.png", "McDonalds").setCongestion(10).setWifiAvailable(true).setPromo("Lunch hour promotion\nEnding in 27 minutes");
+        final EatItem mcD = new EatItem("http://i.imgur.com/7GaUg0d.png", "McDonalds").setCongestion(11).setWifiAvailable(true);
 
         mcD.setLatLng(new LatLng(2.9750013, 101.6717934));
 
         final EatItem pizzaHut = new EatItem("http://i.imgur.com/NpzwdWP.png", "Pizza Hut").setCongestion(10).setWifiAvailable(false);
         pizzaHut.setLatLng(new LatLng(2.920422, 101.6591227));
 
-        mEatItems.addAll(Arrays.asList(kfc, starbucks, mcD, pizzaHut));
+        mEatItems.addAll(Arrays.asList(subway, kfc, pizzaHut, secretRecipe, starbucks, matAyam));
 
 //        mEatItems.put(kfc, kfc.getExpanded());
 //        mEatItems.put(mcD, mcD.getExpanded());

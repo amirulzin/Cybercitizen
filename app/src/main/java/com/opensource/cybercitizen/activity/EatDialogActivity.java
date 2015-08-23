@@ -88,7 +88,6 @@ public class EatDialogActivity extends AppCompatActivity implements OnMapReadyCa
         car = (ImageButton) findViewById(R.id.li_ehe_car);
         bus = (ImageButton) findViewById(R.id.li_ehe_bus);
         taxi = (ImageButton) findViewById(R.id.li_ehe_taxi);
-        tags = (TextView) findViewById(R.id.li_ehe_tags);
         mSuggestion = (TextView) findViewById(R.id.special_suggestion);
         mFrameLayout = (FrameLayout) findViewById(R.id.special_mapfragment);
     }
@@ -116,7 +115,7 @@ public class EatDialogActivity extends AppCompatActivity implements OnMapReadyCa
 
         if (mEatItem.getLatLng() != null)
         {
-            googleMapOptions.camera(new CameraPosition(mEatItem.getLatLng(), 15f, 65f, 0f));
+            googleMapOptions.camera(new CameraPosition(mEatItem.getLatLng(), 17f, 65f, 0f));
         }
         mMapFragment = SupportMapFragment.newInstance(googleMapOptions);
         getSupportFragmentManager().beginTransaction().add(mFrameLayout.getId(), mMapFragment, "maps").commit();
@@ -221,6 +220,7 @@ public class EatDialogActivity extends AppCompatActivity implements OnMapReadyCa
     public void dismiss(View view)
     {
         setResult(0);
+        finish();
     }
 
 
@@ -233,6 +233,8 @@ public class EatDialogActivity extends AppCompatActivity implements OnMapReadyCa
     public void launchMaps(View view)
     {
         Uri data = Uri.parse("geo:" + mEatItem.getLatLng().latitude + "," + mEatItem.getLatLng().longitude);
+
+
         Intent intent = new Intent(Intent.ACTION_VIEW).setData(data);
 
         if (intent.resolveActivity(getPackageManager()) != null)

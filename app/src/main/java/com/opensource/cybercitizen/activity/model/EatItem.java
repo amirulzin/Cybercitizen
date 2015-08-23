@@ -69,9 +69,10 @@ public class EatItem implements Parcelable
         return mLatLng;
     }
 
-    public void setLatLng(final LatLng latLng)
+    public EatItem setLatLng(final LatLng latLng)
     {
         mLatLng = latLng;
+        return this;
     }
 
     public boolean isExpanded()

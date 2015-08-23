@@ -1,12 +1,15 @@
 package com.opensource.cybercitizen.activity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.ColorInt;
+import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -14,6 +17,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -41,7 +45,7 @@ public class HomeActivity extends RecyclerHomeBaseActivity
         @Override
         public void onBindViewHolder(final HomeListItem.ViewHolder holder, final int position)
         {
-            holder.bindData(mHomeListItems.get(position));
+            holder.bindData(HomeActivity.this, mHomeListItems.get(position));
         }
 
         @Override
@@ -128,8 +132,8 @@ public class HomeActivity extends RecyclerHomeBaseActivity
 
     private void setupItems(final List<HomeListItem> homeListItems)
     {
-        homeListItems.add(new HomeListItem("Shop", 25, getResources().getColor(R.color.teal_A200)));
-        final HomeListItem eat = new HomeListItem("Eat", 12, getResources().getColor(R.color.indigo_A200));
+        homeListItems.add(new HomeListItem("Shop", 25, getResources().getColor(R.color.teal_400), R.drawable.ic_action_shopping_cart));
+        final HomeListItem eat = new HomeListItem("Eat", 12, getResources().getColor(R.color.indigo_400), R.drawable.ic_action_local_dining);
         eat.setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -139,11 +143,11 @@ public class HomeActivity extends RecyclerHomeBaseActivity
             }
         });
         homeListItems.add(eat);
-        homeListItems.add(new HomeListItem("Health", 3, getResources().getColor(R.color.light_green_A200)));
+        homeListItems.add(new HomeListItem("Health", 3, getResources().getColor(R.color.light_green_400), R.drawable.ic_action_local_hospital));
 
-        homeListItems.add(new HomeListItem("Travel", 8, getResources().getColor(R.color.orange_A200)));
-        homeListItems.add(new HomeListItem("Outdoor", 16, getResources().getColor(R.color.pink_A200)));
-        homeListItems.add(new HomeListItem("Exhibition", 14, getResources().getColor(R.color.red_A200)));
+        homeListItems.add(new HomeListItem("Travel", 8, getResources().getColor(R.color.orange_400), R.drawable.ic_action_map));
+        homeListItems.add(new HomeListItem("Outdoor", 16, getResources().getColor(R.color.pink_400), R.drawable.ic_action_directions_bike));
+        homeListItems.add(new HomeListItem("Exhibition", 14, getResources().getColor(R.color.red_400), R.drawable.ic_action_local_activity));
     }
 
     @Override
@@ -158,12 +162,19 @@ public class HomeActivity extends RecyclerHomeBaseActivity
         private int itemCounts;
         private int color;
         private View.OnClickListener mOnClickListener;
+        private int resourceDrawableRes;
 
-        public HomeListItem(@NonNull final String title, final int itemCounts, @ColorInt final int color)
+        public HomeListItem(@NonNull final String title, final int itemCounts, @ColorInt final int color, final @DrawableRes int resourceDrawable)
         {
             this.title = title;
             this.itemCounts = itemCounts;
             this.color = color;
+            this.resourceDrawableRes = resourceDrawable;
+        }
+
+        public int getResourceDrawableRes()
+        {
+            return resourceDrawableRes;
         }
 
         public String getTitle()
@@ -216,9 +227,8 @@ public class HomeActivity extends RecyclerHomeBaseActivity
             private static final int VIEWHOLDER_TAG = 1942;
             private static final int LAYOUT_RES = R.layout.listitem_mainhome;
             private final TextView mTitle;
-            private final TextView mItemCount;
-            private final View mColorView;
             private final View mBaseView;
+            private final ImageView mImageView;
             private View.OnClickListener mOnClickListener;
 
 
@@ -226,10 +236,8 @@ public class HomeActivity extends RecyclerHomeBaseActivity
             {
                 super(itemView);
                 mTitle = (TextView) itemView.findViewById(R.id.li_h_title);
-                mItemCount = (TextView) itemView.findViewById(R.id.li_h_itemscount);
-                mColorView = itemView.findViewById(R.id.li_h_barcolor);
                 mBaseView = itemView.findViewById(R.id.li_h_baselayout);
-
+                mImageView = (ImageView) itemView.findViewById(R.id.li_h_image);
                 itemView.setOnClickListener(this);
             }
 
@@ -243,15 +251,17 @@ public class HomeActivity extends RecyclerHomeBaseActivity
                 return VIEWHOLDER_TAG;
             }
 
-            public void bindData(HomeListItem homeListItem)
+            public void bindData(Context context, HomeListItem homeListItem)
             {
                 mTitle.setText(homeListItem.getTitle());
-                mItemCount.setText(homeListItem.getItemCounts() + " items");
-                mColorView.setBackgroundColor(homeListItem.getColor());
                 if (homeListItem.getOnClickListener() != null)
                 {
                     mOnClickListener = homeListItem.getOnClickListener();
                 }
+                final Drawable drawable = context.getResources().getDrawable(homeListItem.getResourceDrawableRes());
+                DrawableCompat.setTint(drawable, homeListItem.getColor());
+                mImageView.setImageDrawable(drawable);
+
             }
 
             @Override
