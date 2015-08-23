@@ -147,12 +147,12 @@ public class EatDialogActivity extends AppCompatActivity implements OnMapReadyCa
                 String[] choiceArr = new String[]{"Might be a good day for quick stroll!", "The coast is clear!", "Somewhat cloudy with a chance of yummy meatballs"};
                 mSuggestion.setText(choiceArr[choice]);
             }
-            mSuggestion.setCompoundDrawables(walk.getDrawable(), null, null, null);
+           // mSuggestion.setCompoundDrawables(walk.getDrawable(), null, null, null);
         }
         else if (id == car.getId())
         {
             mSuggestion.setText("Nearest parking spot with available parking:\nPerhentian Bas Cyberjaya (Terminal)");
-            mSuggestion.setCompoundDrawables(car.getDrawable(), null, null, null);
+            //mSuggestion.setCompoundDrawables(car.getDrawable(), null, null, null);
         }
         else if (id == bus.getId())
         {
@@ -165,12 +165,15 @@ public class EatDialogActivity extends AppCompatActivity implements OnMapReadyCa
                 calendar.add(Calendar.HOUR_OF_DAY, 1);
 
                 mSuggestion.setText("Going back? Next bus near you: HSBC " + dateFormat.format(calendar.getTime()));
+
             }
             else
             {
                 mSuggestion.setText("Going to work? Next DTS bus near your location will be arriving at " + dateFormat.format(calendar.getTime()));
+                
             }
-            mSuggestion.setCompoundDrawables(bus.getDrawable(), null, null, null);
+            //mSuggestion.setCompoundDrawables(drawable, null, null, null);
+
         }
         else if (id == taxi.getId())
         {
@@ -205,7 +208,7 @@ public class EatDialogActivity extends AppCompatActivity implements OnMapReadyCa
 
             builder.show();
 
-            mSuggestion.setCompoundDrawables(taxi.getDrawable(), null, null, null);
+            //mSuggestion.setCompoundDrawables(taxi.getDrawable(), null, null, null);
 
         }
     }
