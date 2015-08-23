@@ -1,11 +1,15 @@
 package com.opensource.cybercitizen.activity;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.ArraySet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,11 +21,12 @@ import com.google.android.gms.maps.model.LatLng;
 import com.opensource.cybercitizen.R;
 import com.opensource.cybercitizen.activity.model.EatItem;
 import com.opensource.cybercitizen.base.RecyclerHomeBaseActivity;
-import com.opensource.cybercitizen.fragment.EatDialogActivity;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
+import java.util.UUID;
 
 public class EatHomeActivity extends RecyclerHomeBaseActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener
 {
@@ -142,18 +147,61 @@ public class EatHomeActivity extends RecyclerHomeBaseActivity implements GoogleA
             drawable = getResources().getDrawable(R.drawable.gradient_shadow_top, getTheme());
 
         getCollapsingToolbarLayout().setForeground(drawable);
-
+        setDrawerNavigationButton(getTitleToolbar());
     }
 
     @Override
     public int getDrawerItemId()
     {
-        return R.menu.menu_drawer;
+        return R.id.md_nav_eathome;
     }
 
     public void launchDialog(EatItem eatItem, ViewGroup parent)
     {
         startActivityForResult(new Intent(this, EatDialogActivity.class).putExtra(EatDialogActivity.getEatItemIntentKey(), eatItem), 0);
+    }
+
+
+    @Override
+    protected void onActivityResult(final int requestCode, final int resultCode, final Intent data)
+    {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == 1)
+        {
+            Snackbar.make(getRecyclerView(), "Thank you for your patronage. Here's a redeemable 10% off voucher code", Snackbar.LENGTH_INDEFINITE).setAction("REDEEM", new View.OnClickListener()
+            {
+                @Override
+                public void onClick(final View v)
+                {
+                    final Set<String> strings = new ArraySet<>(64);
+                    final UUID key = UUID.randomUUID();
+
+                    EatHomeActivity.this.getSharedPreferences("shared_prefs", MODE_PRIVATE).getStringSet("DISCOUNT_COUPON", strings).add(key.toString());
+
+                    AlertDialog.Builder builder = new AlertDialog.Builder(EatHomeActivity.this).setPositiveButton("SAVE", new DialogInterface.OnClickListener()
+                    {
+                        @Override
+                        public void onClick(final DialogInterface dialog, final int which)
+                        {
+
+                            EatHomeActivity.this.getSharedPreferences("shared_prefs", MODE_PRIVATE).edit().putStringSet("DISCOUNT_COUPON", strings).apply();
+                            dialog.dismiss();
+                        }
+                    }).setNegativeButton("SKIP", new DialogInterface.OnClickListener()
+                    {
+                        @Override
+                        public void onClick(final DialogInterface dialog, final int which)
+                        {
+                            dialog.dismiss();
+                        }
+                    });
+
+                    builder.setMessage("COUPON: CYBERCEEJAY15");
+                    builder.show();
+                }
+            }).show();
+        }
+
     }
 
     @Override

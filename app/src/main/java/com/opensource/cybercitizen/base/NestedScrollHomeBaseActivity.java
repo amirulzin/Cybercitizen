@@ -7,6 +7,7 @@ import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.opensource.common.ui.BaseDrawerActivity;
@@ -28,7 +29,7 @@ public abstract class NestedScrollHomeBaseActivity extends BaseDrawerActivity
     protected void onCreate(final Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        final View view = inflateContent(R.layout.layout_base_recycler_collapsible);
+        final View view = inflateContent(R.layout.layout_base_nestedscroll_collapsible);
         innerSetupViews(view);
         setupView(savedInstanceState, view);
     }
@@ -63,7 +64,8 @@ public abstract class NestedScrollHomeBaseActivity extends BaseDrawerActivity
     public View inflateNestedContent(@LayoutRes int layoutResourceId)
     {
         View inflatedView = LayoutInflater.from(NestedScrollHomeBaseActivity.this).inflate(layoutResourceId, mNestedScrollView, false);
-        mNestedScrollView.addView(inflatedView);
+        NestedScrollView.LayoutParams params = new NestedScrollView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        mNestedScrollView.addView(inflatedView, 0, params);
         return inflatedView;
     }
 }

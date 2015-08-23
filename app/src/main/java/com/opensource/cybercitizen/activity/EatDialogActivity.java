@@ -1,4 +1,4 @@
-package com.opensource.cybercitizen.fragment;
+package com.opensource.cybercitizen.activity;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -69,7 +69,7 @@ public class EatDialogActivity extends AppCompatActivity implements OnMapReadyCa
         getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         super.onCreate(savedInstanceState);
         mEatItem = getIntent().getParcelableExtra(getEatItemIntentKey());
-        setContentView(R.layout.dialog_eatbase);
+        setContentView(R.layout.activity_dialog_eat);
         setup();
         bindData(mEatItem);
         weatherData = new Weather();
@@ -160,7 +160,8 @@ public class EatDialogActivity extends AppCompatActivity implements OnMapReadyCa
 
             if (calendar.get(Calendar.HOUR_OF_DAY) > 12)
             {
-                calendar.roll(Calendar.HOUR_OF_DAY, 1);
+                calendar.add(Calendar.HOUR_OF_DAY, 1);
+
                 mSuggestion.setText("Going back? Next bus near you: HSBC " + dateFormat.format(calendar.getTime()));
             }
             else
@@ -220,7 +221,6 @@ public class EatDialogActivity extends AppCompatActivity implements OnMapReadyCa
     public void dismiss(View view)
     {
         setResult(0);
-        finish();
     }
 
 
@@ -228,6 +228,19 @@ public class EatDialogActivity extends AppCompatActivity implements OnMapReadyCa
     public void onWeatherReady(final Weather weather)
     {
 
+    }
+
+    public void launchMaps(View view)
+    {
+        Uri data = Uri.parse("geo:" + mEatItem.getLatLng().latitude + "," + mEatItem.getLatLng().longitude);
+        Intent intent = new Intent(Intent.ACTION_VIEW).setData(data);
+
+        if (intent.resolveActivity(getPackageManager()) != null)
+        {
+            startActivity(intent);
+        }
+        setResult(1);
+        finish();
     }
 //
 //    View view = LayoutInflater.from(this).inflate(R.layout.listitem_eathome_expanded, parent, false);

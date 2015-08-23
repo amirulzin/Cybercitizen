@@ -1,132 +1,14 @@
-package com.opensource.cybercitizen.activity;
+package com.opensource.cybercitizen;
 
-import android.os.Bundle;
-import android.os.PersistableBundle;
-import android.view.View;
-import android.widget.TextView;
-
-import com.bumptech.glide.Glide;
-import com.github.mikephil.charting.animation.Easing;
-import com.github.mikephil.charting.charts.BarChart;
-import com.github.mikephil.charting.data.BarData;
-import com.github.mikephil.charting.data.BarDataSet;
-import com.github.mikephil.charting.data.BarEntry;
-import com.opensource.cybercitizen.R;
 import com.opensource.cybercitizen.activity.model.Merchant;
-import com.opensource.cybercitizen.base.NestedScrollHomeBaseActivity;
+
+import org.junit.Test;
 
 import java.util.ArrayList;
-import java.util.List;
 
-public class MerchantHomeActivity extends NestedScrollHomeBaseActivity
+
+public class CountTest
 {
-
-    private BarChart mBarChart;
-
-    @Override
-    public void onCreate(final Bundle savedInstanceState, final PersistableBundle persistentState)
-    {
-        super.onCreate(savedInstanceState, persistentState);
-    }
-
-    @Override
-    public void setupView(final Bundle savedInstanceState, final View baseLayout)
-    {
-        getCollapsingToolbarLayout().setTitle("Restoran Mat Ayam Kampung");
-        Glide.with(this).load(R.drawable.uc_ayammat_header).into(getHeaderImageView());
-
-        View baseView = inflateNestedContent(R.layout.activity_merchant);
-        int day = 7;
-        Merchant merchant = getMerchant();
-
-        mBarChart = (BarChart) baseView.findViewById(R.id.am_chart);
-
-        mBarChart.post(new Runnable()
-        {
-            @Override
-            public void run()
-            {
-                mBarChart.animateY(2500, Easing.EasingOption.EaseInQuad);
-            }
-        });
-        mBarChart.setAutoScaleMinMaxEnabled(true);
-        List<BarEntry> actualEntry = new ArrayList<>();
-        int maxActualCongestion = 0;
-        List<String> xAxis = new ArrayList<>();
-        for (int i = 1; i < 25; i++)
-        {
-            xAxis.add(String.valueOf(i));
-        }
-        for (Merchant.Demand actualDemand : merchant.getActualDemands())
-        {
-            if (actualDemand.getDay() == day)
-            {
-                if (maxActualCongestion <= actualDemand.getCongestion())
-                {
-                    maxActualCongestion = actualDemand.getCongestion();
-                }
-
-                BarEntry entry = new BarEntry(actualDemand.getCongestion(), actualDemand.getHour());
-                actualEntry.add(entry);
-
-            }
-        }
-        final String yLabel = "Congestion per hour on " + day + " Aug";
-        BarDataSet actualBarDataSet = new BarDataSet(actualEntry, yLabel);
-        final BarData actualData = new BarData(xAxis, actualBarDataSet);
-
-
-        List<BarEntry> forecastEntries = new ArrayList<>();
-        for (Merchant.Demand forecastDemand : merchant.getForecastDemands())
-        {
-            if (forecastDemand.getDay() == day)
-            {
-                BarEntry entry = new BarEntry(forecastDemand.getCongestion(), forecastDemand.getHour());
-                forecastEntries.add(entry);
-            }
-        }
-        BarDataSet forecastDataSet = new BarDataSet(forecastEntries, yLabel);
-        final BarData forecastData = new BarData(xAxis, forecastDataSet);
-
-
-        mBarChart.setData(actualData);
-        mBarChart.setDescription(null);
-        mBarChart.getAxisRight().setDrawGridLines(false);
-
-
-        ((TextView) findViewById(R.id.am_congestion_highest)).setText(String.valueOf(maxActualCongestion));
-        ((TextView) findViewById(R.id.am_congestion_lowest)).setText(String.format("%.1f", actualData.getYValueSum() / actualData.getXValCount()));
-
-
-        findViewById(R.id.am_actual).setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(final View v)
-            {
-                mBarChart.setData(actualData);
-                mBarChart.animateY(1000, Easing.EasingOption.EaseInQuad);
-            }
-        });
-
-
-        findViewById(R.id.am_forecast).setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(final View v)
-            {
-                mBarChart.setData(forecastData);
-                mBarChart.animateY(1000, Easing.EasingOption.EaseInQuad);
-            }
-        });
-
-    }
-
-
-    @Override
-    public int getDrawerItemId()
-    {
-        return 0;
-    }
 
     public Merchant getMerchant()
     {
@@ -186,5 +68,11 @@ public class MerchantHomeActivity extends NestedScrollHomeBaseActivity
 
     }
 
-
+    @Test
+    public void testmerchantParse()
+    {
+        final Merchant merchant = getMerchant();
+        System.out.println(merchant.getActualDemands().size());
+        System.out.println(merchant.getForecastDemands().size());
+    }
 }
