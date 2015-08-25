@@ -23,7 +23,7 @@ public class LoginActivity extends AppCompatActivity
     private void setupViews()
     {
         ImageView imageView = (ImageView) findViewById(R.id.al_bg_imageview);
-        Glide.with(this).load(R.raw.login_background).diskCacheStrategy(DiskCacheStrategy.ALL).into(imageView);
+        Glide.with(this).load(R.raw.login_background).diskCacheStrategy(DiskCacheStrategy.ALL).placeholder(R.drawable.blank_drawable).into(imageView);
     }
 
     public void executeLogin(View view)

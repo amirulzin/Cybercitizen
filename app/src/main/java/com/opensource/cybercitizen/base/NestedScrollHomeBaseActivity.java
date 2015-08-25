@@ -36,7 +36,7 @@ public abstract class NestedScrollHomeBaseActivity extends BaseDrawerActivity
 
     public abstract void setupView(Bundle savedInstanceState, View baseLayout);
 
-    public NestedScrollView getRecyclerView()
+    public NestedScrollView getNestedScrollView()
     {
         return mNestedScrollView;
     }
@@ -58,7 +58,6 @@ public abstract class NestedScrollHomeBaseActivity extends BaseDrawerActivity
 
         mCollapsingToolbarLayout = (CollapsingToolbarLayout) baseLayout.findViewById(R.id.lbnc_collapsingtoolbar);
         mNestedScrollView = (NestedScrollView) baseLayout.findViewById(R.id.lbnc_scrollview);
-
     }
 
     public View inflateNestedContent(@LayoutRes int layoutResourceId)
