@@ -17,10 +17,10 @@ public final class ActivityFactory
             case R.id.md_nav_home:
                 intent.setClass(context, HomeActivity.class);
                 break;
-            case R.id.md_nav_eathome:
+            case R.id.md_nav_eat:
                 intent.setClass(context, EatHomeActivity.class);
                 break;
-            case R.id.md_nav_about:
+            default:
                 intent = null;
         }
 
