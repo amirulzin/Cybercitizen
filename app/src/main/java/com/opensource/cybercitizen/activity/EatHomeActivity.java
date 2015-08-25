@@ -184,7 +184,7 @@ public class EatHomeActivity extends RecyclerHomeBaseActivity implements GoogleA
     @Override
     public int getDrawerItemId()
     {
-        return R.id.md_nav_eathome;
+        return R.id.md_nav_eat;
     }
 
     public void launchDialog(EatItem eatItem, ViewGroup parent)

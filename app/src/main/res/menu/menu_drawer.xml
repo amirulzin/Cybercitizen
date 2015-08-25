@@ -1,17 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <group android:checkableBehavior="single">
+    <group>
         <item
             android:id="@+id/md_nav_home"
             android:icon="@drawable/ic_action_location_city"
             android:title="@string/activity_home" />
         <item
+            android:id="@+id/md_nav_profile"
+            android:icon="@drawable/ic_action_face"
+            android:title="@string/activity_home" />
+    </group>
+    <group>
+        <item
+            android:id="@+id/md_nav_shop"
+            android:icon="@drawable/ic_action_shopping_cart"
+            android:title="@string/activity_shop" />
+        <item
+            android:id="@+id/md_nav_eat"
+            android:icon="@drawable/ic_action_local_dining"
+            android:title="@string/activity_eat" />
+        <item
+            android:id="@+id/md_nav_health"
+            android:icon="@drawable/ic_action_local_hospital"
+            android:title="@string/activity_health" />
+        <item
+            android:id="@+id/md_nav_travel"
+            android:icon="@drawable/ic_action_map"
+            android:title="@string/activity_travel" />
+        <item
+            android:id="@+id/md_nav_outdoor"
+            android:icon="@drawable/ic_action_directions_bike"
+            android:title="@string/activity_outdoor" />
+        <item
+            android:id="@+id/md_nav_exhibition"
+            android:icon="@drawable/ic_action_local_activity"
+            android:title="@string/activity_exhibition" />
+    </group>
+    <group>
+        <item
+            android:id="@+id/md_nav_settings"
+            android:icon="@drawable/ic_setting_dark"
+            android:title="@string/drawer_settings" />
+        <item
             android:id="@+id/md_nav_about"
             android:icon="@drawable/ic_action_info"
             android:title="@string/drawer_about" />
-        <item
-            android:id="@+id/md_nav_eathome"
-            android:icon="@drawable/ic_action_local_dining"
-            android:title="@string/activity_eat" />
     </group>
 </menu>
