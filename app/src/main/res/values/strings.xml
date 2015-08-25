@@ -12,4 +12,5 @@
     <string name="activity_travel">Travel</string>
     <string name="activity_outdoor">Outdoor</string>
     <string name="activity_exhibition">Exhibition</string>
+    <string name="activity_profile">Profile</string>
 </resources>

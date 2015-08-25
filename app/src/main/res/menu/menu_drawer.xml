@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <group>
+    <group android:id="@+id/md_group_top">
         <item
             android:id="@+id/md_nav_home"
             android:icon="@drawable/ic_action_location_city"
@@ -8,9 +8,9 @@
         <item
             android:id="@+id/md_nav_profile"
             android:icon="@drawable/ic_action_face"
-            android:title="@string/activity_home" />
+            android:title="@string/activity_profile" />
     </group>
-    <group>
+    <group android:id="@+id/md_group_mid">
         <item
             android:id="@+id/md_nav_shop"
             android:icon="@drawable/ic_action_shopping_cart"
@@ -36,10 +36,10 @@
             android:icon="@drawable/ic_action_local_activity"
             android:title="@string/activity_exhibition" />
     </group>
-    <group>
+    <group android:id="@+id/md_group_bottom">
         <item
             android:id="@+id/md_nav_settings"
-            android:icon="@drawable/ic_setting_dark"
+            android:icon="@drawable/ic_action_settings"
             android:title="@string/drawer_settings" />
         <item
             android:id="@+id/md_nav_about"
