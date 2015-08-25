@@ -1,7 +1,7 @@
 package com.opensource.cybercitizen.activity.model;
 
 import android.content.Context;
-import android.os.AsyncTask;
+import android.location.Location;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.v7.widget.RecyclerView;
@@ -13,6 +13,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.android.gms.maps.model.LatLng;
 import com.opensource.cybercitizen.R;
+import com.opensource.util.Util;
 
 public class EatItem implements Parcelable
 {
@@ -62,6 +63,24 @@ public class EatItem implements Parcelable
         this.timedPromo = in.readInt();
         this.expanded = in.readByte() != 0;
         this.mWifiAvailable = in.readByte() != 0;
+    }
+
+    public Location getLocation()
+    {
+        final Location here = new Location(header);
+        here.setLatitude(mLatLng.latitude);
+        here.setLongitude(mLatLng.longitude);
+        return here;
+    }
+
+    public float getRawDistanceTo(final Location location)
+    {
+        return location.distanceTo(getLocation());
+    }
+
+    public float getRawDistanceTo(final EatItem eatItem)
+    {
+        return getLocation().distanceTo(eatItem.getLocation());
     }
 
     public LatLng getLatLng()
@@ -175,8 +194,7 @@ public class EatItem implements Parcelable
     {
         private static final int LAYOUT_RES = R.layout.listitem_eathome;
         private ImageView mImageView;
-        private TextView mHeader, mWifistatus, mPromo, mCongestion;
-        private EatItem mEatItem;
+        private TextView mHeader, mWifistatus, mPromo, mCongestion, mDistance;
         private View.OnClickListener onClickCallback;
 
         public EatItemViewHolder(final View itemView)
@@ -187,7 +205,7 @@ public class EatItem implements Parcelable
             mWifistatus = (TextView) itemView.findViewById(R.id.li_eh_wifistatus);
             mPromo = (TextView) itemView.findViewById(R.id.li_eh_promo);
             mCongestion = (TextView) itemView.findViewById(R.id.li_eh_congestion);
-
+            mDistance = (TextView) itemView.findViewById(R.id.li_eh_distance);
             itemView.setOnClickListener(this);
         }
 
@@ -203,8 +221,8 @@ public class EatItem implements Parcelable
 
         public void bindData(EatItem eatItem, Context context)
         {
-            mEatItem = eatItem;
-            Glide.with(context).load(eatItem.getImageUri()).diskCacheStrategy(DiskCacheStrategy.ALL).into(mImageView).onLoadFailed(new IllegalStateException("FAIL LOAD"), context.getResources().getDrawable(R.drawable.abc_btn_rating_star_on_mtrl_alpha));
+
+            Glide.with(context).load(eatItem.getImageUri()).diskCacheStrategy(DiskCacheStrategy.ALL).into(mImageView);
 
             mHeader.setText(eatItem.getHeader());
             mWifistatus.setText(eatItem.getWifiStatus());
@@ -217,62 +235,72 @@ public class EatItem implements Parcelable
                 mWifistatus.setTextColor(context.getResources().getColor(R.color.textColorNegative));
             }
 
-            mPromo.setText(eatItem.getPromo());
+            if (eatItem.getPromo() != null)
+            {
+                mPromo.setText(eatItem.getPromo());
+            }
+            else mPromo.setText("");
+
             mCongestion.setText(eatItem.getCongestion());
 
         }
 
-        public void startTimer()
+        public void displayDistanceFrom(EatItem origin, Location location)
         {
-            AsyncTask<Integer, Integer, Void> asyncTask = new AsyncTask<Integer, Integer, Void>()
-            {
-                private String basePromo = "{init}";
-
-                @Override
-                protected Void doInBackground(final Integer... params)
-                {
-                    int time = params[0];
-
-                    try
-                    {
-                        if (time > 0)
-                        {
-                            while (time > 0)
-                            {
-                                time--;
-                                publishProgress(time);
-                                Thread.sleep(1000);
-                            }
-                        }
-
-                    }
-                    catch (InterruptedException e)
-                    {
-                        e.printStackTrace();
-                    }
-                    return null;
-                }
-
-                @Override
-                protected void onProgressUpdate(final Integer... values)
-                {
-                    super.onProgressUpdate(values);
-                    if (mEatItem != null)
-                    {
-
-                        if (basePromo.equals("{init}"))
-                        {
-                            basePromo = mEatItem.getPromo();
-                        }
-
-                        String outPromo = basePromo + "Ending in " + values[0] + " minutes";
-
-                        mEatItem.setPromo(outPromo);
-                    }
-                }
-            };
-            asyncTask.execute(mEatItem.getTimedPromo());
+            mDistance.setText(Util.formatDistanceInMeters(origin.getRawDistanceTo(location), 1));
         }
+
+//        public void startTimer()
+//        {
+//            AsyncTask<Integer, Integer, Void> asyncTask = new AsyncTask<Integer, Integer, Void>()
+//            {
+//                private String basePromo = "{init}";
+//
+//                @Override
+//                protected Void doInBackground(final Integer... params)
+//                {
+//                    int time = params[0];
+//
+//                    try
+//                    {
+//                        if (time > 0)
+//                        {
+//                            while (time > 0)
+//                            {
+//                                time--;
+//                                publishProgress(time);
+//                                Thread.sleep(1000);
+//                            }
+//                        }
+//
+//                    }
+//                    catch (InterruptedException e)
+//                    {
+//                        e.printStackTrace();
+//                    }
+//                    return null;
+//                }
+//
+//                @Override
+//                protected void onProgressUpdate(final Integer... values)
+//                {
+//                    super.onProgressUpdate(values);
+//                    if (mEatItem != null)
+//                    {
+//
+//                        if (basePromo.equals("{init}"))
+//                        {
+//                            basePromo = mEatItem.getPromo();
+//                        }
+//
+//                        String outPromo = basePromo + "Ending in " + values[0] + " minutes";
+//
+//                        mEatItem.setPromo(outPromo);
+//                    }
+//                }
+//            };
+//            asyncTask.execute(mEatItem.getTimedPromo());
+//        }
 
         @Override
         public void onClick(final View v)

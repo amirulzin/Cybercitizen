@@ -144,7 +144,6 @@ public class HomeActivity extends RecyclerHomeBaseActivity
         });
         homeListItems.add(eat);
         homeListItems.add(new HomeListItem("Health", 3, getResources().getColor(R.color.light_green_400), R.drawable.ic_action_local_hospital));
-
         homeListItems.add(new HomeListItem("Travel", 8, getResources().getColor(R.color.orange_400), R.drawable.ic_action_map));
         homeListItems.add(new HomeListItem("Outdoor", 16, getResources().getColor(R.color.pink_400), R.drawable.ic_action_directions_bike));
         homeListItems.add(new HomeListItem("Exhibition", 14, getResources().getColor(R.color.red_400), R.drawable.ic_action_local_activity));
@@ -259,7 +258,7 @@ public class HomeActivity extends RecyclerHomeBaseActivity
                     mOnClickListener = homeListItem.getOnClickListener();
                 }
                 final Drawable drawable = context.getResources().getDrawable(homeListItem.getResourceDrawableRes());
-                DrawableCompat.setTint(drawable, homeListItem.getColor());
+                DrawableCompat.setTint(DrawableCompat.wrap(drawable), homeListItem.getColor());
                 mImageView.setImageDrawable(drawable);
 
             }

@@ -19,6 +19,18 @@ import android.widget.ImageButton;
  */
 public class Util
 {
+
+    public static String formatDistanceInMeters(float meters, int decimals)
+    {
+
+        if (meters >= 1000)
+        {
+            return String.format("%." + decimals + "f km", meters / 1000);
+        }
+        else
+            return String.format("%." + decimals + "f m", meters);
+    }
+
     public static int dpToPx(Context context, int dp)
     {
         return (int) (dp * context.getResources().getDisplayMetrics().density);

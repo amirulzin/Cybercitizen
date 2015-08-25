@@ -1,7 +1,7 @@
 package com.opensource.cybercitizen.activity;
 
 import android.os.Bundle;
-import android.os.PersistableBundle;
+import android.support.design.widget.FloatingActionButton;
 import android.view.View;
 import android.widget.TextView;
 
@@ -24,12 +24,6 @@ public class MerchantHomeActivity extends NestedScrollHomeBaseActivity
     private BarChart mBarChart;
 
     @Override
-    public void onCreate(final Bundle savedInstanceState, final PersistableBundle persistentState)
-    {
-        super.onCreate(savedInstanceState, persistentState);
-    }
-
-    @Override
     public void setupView(final Bundle savedInstanceState, final View baseLayout)
     {
         getCollapsingToolbarLayout().setTitle("Restoran Mat Ayam Kampung");
@@ -39,7 +33,7 @@ public class MerchantHomeActivity extends NestedScrollHomeBaseActivity
         int day = 7;
         Merchant merchant = getMerchant();
 
-        mBarChart = (BarChart) baseView.findViewById(R.id.am_chart);
+        mBarChart = null;
 
         mBarChart.post(new Runnable()
         {
@@ -119,6 +113,15 @@ public class MerchantHomeActivity extends NestedScrollHomeBaseActivity
             }
         });
 
+        FloatingActionButton floatingActionButton = (FloatingActionButton) findViewById(R.id.am_fab);
+        floatingActionButton.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(final View v)
+            {
+
+            }
+        });
     }
 
 

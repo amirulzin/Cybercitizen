@@ -1,9 +1,11 @@
 package com.opensource.cybercitizen.activity;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -29,6 +31,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.opensource.cybercitizen.R;
 import com.opensource.cybercitizen.activity.model.EatItem;
 import com.opensource.cybercitizen.controller.Weather;
+import com.opensource.util.Util;
 
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
@@ -49,10 +52,21 @@ public class EatDialogActivity extends AppCompatActivity implements OnMapReadyCa
     private ImageButton walk, car, bus, taxi;
     private TextView tags;
     private FrameLayout mFrameLayout;
+    private Location mLastLocation;
+
+    public static Intent getDialogIntent(Context context, EatItem eatItem, @Nullable Location currentLocation)
+    {
+        return new Intent(context, EatDialogActivity.class).putExtra(getEatItemIntentKey(), eatItem).putExtra(getLocationIntentKey(), currentLocation);
+    }
 
     public static String getEatItemIntentKey()
     {
         return EatDialogActivity.class.getSimpleName() + "$eat_key";
+    }
+
+    public static String getLocationIntentKey()
+    {
+        return EatDialogActivity.class.getSimpleName() + "$loc_key";
     }
 
     @Override
@@ -69,6 +83,7 @@ public class EatDialogActivity extends AppCompatActivity implements OnMapReadyCa
         getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         super.onCreate(savedInstanceState);
         mEatItem = getIntent().getParcelableExtra(getEatItemIntentKey());
+        mLastLocation = getIntent().getParcelableExtra(getLocationIntentKey());
         setContentView(R.layout.activity_dialog_eat);
         setup();
         bindData(mEatItem);
@@ -108,7 +123,13 @@ public class EatDialogActivity extends AppCompatActivity implements OnMapReadyCa
             mWifistatus.setTextColor(getResources().getColor(R.color.textColorNegative));
         }
 
-        mPromo.setText(eatItem.getPromo());
+        final String promo = eatItem.getPromo();
+        if (promo != null)
+        {
+            mPromo.setText(promo);
+        }
+        else
+            mPromo.setVisibility(View.GONE);
         mCongestion.setText(eatItem.getCongestion());
 
         final GoogleMapOptions googleMapOptions = new GoogleMapOptions();
@@ -117,9 +138,11 @@ public class EatDialogActivity extends AppCompatActivity implements OnMapReadyCa
         {
             googleMapOptions.camera(new CameraPosition(mEatItem.getLatLng(), 17f, 65f, 0f));
         }
+
         mMapFragment = SupportMapFragment.newInstance(googleMapOptions);
         getSupportFragmentManager().beginTransaction().add(mFrameLayout.getId(), mMapFragment, "maps").commit();
         mMapFragment.getMapAsync(EatDialogActivity.this);
+
         for (Drawable drawable : Arrays.asList(mSuggestion.getCompoundDrawables()))
         {
             if (drawable != null)
@@ -147,7 +170,7 @@ public class EatDialogActivity extends AppCompatActivity implements OnMapReadyCa
                 String[] choiceArr = new String[]{"Might be a good day for quick stroll!", "The coast is clear!", "Somewhat cloudy with a chance of yummy meatballs"};
                 mSuggestion.setText(choiceArr[choice]);
             }
-           // mSuggestion.setCompoundDrawables(walk.getDrawable(), null, null, null);
+            // mSuggestion.setCompoundDrawables(walk.getDrawable(), null, null, null);
         }
         else if (id == car.getId())
         {
@@ -170,7 +193,7 @@ public class EatDialogActivity extends AppCompatActivity implements OnMapReadyCa
             else
             {
                 mSuggestion.setText("Going to work? Next DTS bus near your location will be arriving at " + dateFormat.format(calendar.getTime()));
-                
+
             }
             //mSuggestion.setCompoundDrawables(drawable, null, null, null);
 
@@ -221,7 +244,13 @@ public class EatDialogActivity extends AppCompatActivity implements OnMapReadyCa
             LatLng latLng = mEatItem.getLatLng();
             if (latLng != null)
             {
-                googleMap.addMarker(new MarkerOptions().position(latLng).snippet(mEatItem.getHeader())).showInfoWindow();
+                final MarkerOptions markerOptions = new MarkerOptions().position(latLng).title(mEatItem.getHeader());
+                if (mLastLocation != null)
+                {
+                    markerOptions.snippet(Util.formatDistanceInMeters(mLastLocation.distanceTo(mEatItem.getLocation()), 1));
+                }
+                googleMap.addMarker(markerOptions).showInfoWindow();
+
             }
         }
     }
