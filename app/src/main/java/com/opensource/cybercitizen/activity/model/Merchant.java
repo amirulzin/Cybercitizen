@@ -34,9 +34,9 @@ public class Merchant
 
     public static class Demand
     {
-        int day;
-        int hour;
-        int congestion;
+        int day = -1;
+        int hour = -1;
+        int congestion = -1;
 
         public Demand(final String day, final int hour, final int congestion)
         {

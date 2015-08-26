@@ -15,6 +15,9 @@ import com.google.android.gms.maps.model.LatLng;
 import com.opensource.cybercitizen.R;
 import com.opensource.util.Util;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class EatItem implements Parcelable
 {
     public static final Parcelable.Creator<EatItem> CREATOR = new Parcelable.Creator<EatItem>()
@@ -31,6 +34,7 @@ public class EatItem implements Parcelable
     String promo;
     int timedPromo = -1;
     boolean expanded = false;
+    List<String> tags = new ArrayList<>();
     private boolean mWifiAvailable = false;
 
     public EatItem(final String imageUri, final String header)
@@ -63,6 +67,11 @@ public class EatItem implements Parcelable
         this.timedPromo = in.readInt();
         this.expanded = in.readByte() != 0;
         this.mWifiAvailable = in.readByte() != 0;
+    }
+
+    public List<String> getTags()
+    {
+        return tags;
     }
 
     public Location getLocation()

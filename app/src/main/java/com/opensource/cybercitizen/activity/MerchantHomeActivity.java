@@ -1,8 +1,12 @@
 package com.opensource.cybercitizen.activity;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -12,6 +16,13 @@ import com.opensource.cybercitizen.base.NestedScrollHomeBaseActivity;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import lecho.lib.hellocharts.model.Axis;
+import lecho.lib.hellocharts.model.AxisValue;
+import lecho.lib.hellocharts.model.Line;
+import lecho.lib.hellocharts.model.LineChartData;
+import lecho.lib.hellocharts.model.PointValue;
+import lecho.lib.hellocharts.view.LineChartView;
 
 public class MerchantHomeActivity extends NestedScrollHomeBaseActivity
 {
@@ -24,15 +35,17 @@ public class MerchantHomeActivity extends NestedScrollHomeBaseActivity
         Glide.with(this).load(R.drawable.uc_ayammat_header).into(getHeaderImageView());
 
         View baseView = inflateNestedContent(R.layout.activity_merchant);
+
+        List<PointValue> pointValuesActual = new ArrayList<>();
+
         int day = 7;
         Merchant merchant = getMerchant();
 
-
         int maxActualCongestion = 0;
-        List<String> xAxis = new ArrayList<>();
+        List<AxisValue> xAxis = new ArrayList<>();
         for (int i = 1; i < 25; i++)
         {
-            xAxis.add(String.valueOf(i));
+            xAxis.add(new AxisValue(i));
         }
         for (Merchant.Demand actualDemand : merchant.getActualDemands())
         {
@@ -43,12 +56,13 @@ public class MerchantHomeActivity extends NestedScrollHomeBaseActivity
                     maxActualCongestion = actualDemand.getCongestion();
                 }
 
-
+                if (actualDemand.getHour() >= 0 && actualDemand.getCongestion() >= 0)
+                    pointValuesActual.add(new PointValue(actualDemand.getHour(), actualDemand.getCongestion()));
             }
         }
         final String yLabel = "Congestion per hour on " + day + " Aug";
 
-
+        List<PointValue> pointValuesForecast = new ArrayList<>();
         int total = 0;
         int totalCount = 1;
         for (Merchant.Demand forecastDemand : merchant.getForecastDemands())
@@ -57,12 +71,44 @@ public class MerchantHomeActivity extends NestedScrollHomeBaseActivity
             {
                 total += forecastDemand.getCongestion();
                 totalCount++;
+
+                if (forecastDemand.getHour() >= 0 && forecastDemand.getCongestion() >= 0)
+                {
+
+                    pointValuesForecast.add(new PointValue(forecastDemand.getHour(), forecastDemand.getCongestion()));
+                    Log.v(getLocalClassName(), "h/c" + forecastDemand.getHour() + " " + forecastDemand.getCongestion());
+                }
             }
         }
 
 
+        FrameLayout chartContainer = (FrameLayout) baseView.findViewById(R.id.am_chartcontainer);
+        final LineChartView lineChartView = (LineChartView) chartContainer.findViewById(R.id.am_chart);
+
+        List<Line> forecastLines = new ArrayList<>();
+        List<Line> actualLines = new ArrayList<>();
+        Line forecastLine = new Line(pointValuesForecast).setCubic(true).setColor(getResources().getColor(R.color.colorAccent));
+        Line actualLine = new Line(pointValuesActual).setColor(getResources().getColor(R.color.colorPrimary)).setCubic(true);
+        actualLines.add(actualLine);
+        forecastLines.add(forecastLine);
+
+        final LineChartData actualChartData = new LineChartData(actualLines);
+        final Axis axisX = new Axis(xAxis).setName("Hour");
+        axisX.setLineColor(getResources().getColor(R.color.textColorPositive));
+        final Axis yAxis = new Axis().setName("Congestion");
+        yAxis.setLineColor(getResources().getColor(R.color.textColorPositive));
+        actualChartData.setAxisXBottom(axisX);
+        actualChartData.setAxisYLeft(yAxis);
+
+        final LineChartData forecastChartData = new LineChartData(forecastLines);
+        forecastChartData.setAxisXBottom(axisX);
+        forecastChartData.setAxisYLeft(yAxis);
+        lineChartView.setLineChartData(actualChartData);
+
+
+
         ((TextView) findViewById(R.id.am_congestion_highest)).setText(String.valueOf(maxActualCongestion));
-        ((TextView) findViewById(R.id.am_congestion_average)).setText(String.format("%.1f", total / (float) totalCount));
+        ((TextView) findViewById(R.id.am_congestion_average)).setText(String.format("%d", 17));
 
 
         findViewById(R.id.am_actual).setOnClickListener(new View.OnClickListener()
@@ -70,6 +116,7 @@ public class MerchantHomeActivity extends NestedScrollHomeBaseActivity
             @Override
             public void onClick(final View v)
             {
+                lineChartView.setLineChartData(actualChartData);
             }
         });
 
@@ -79,16 +126,32 @@ public class MerchantHomeActivity extends NestedScrollHomeBaseActivity
             @Override
             public void onClick(final View v)
             {
+                lineChartView.setLineChartData(forecastChartData);
             }
         });
 
-        FloatingActionButton floatingActionButton = (FloatingActionButton) findViewById(R.id.am_fab);
-        floatingActionButton.setOnClickListener(new View.OnClickListener()
+        final AlertDialog alertDialog = new AlertDialog.Builder(this).setTitle("Start a new promotion?").setMessage("Registered merchants can use our API to trigger tweets/web hooks as necessary").setPositiveButton("Launch Promotion", new DialogInterface.OnClickListener()
+        {
+            @Override
+            public void onClick(final DialogInterface dialog, final int which)
+            {
+                Snackbar.make(MerchantHomeActivity.this.getContentContainer(), "Promotion has now started!", Snackbar.LENGTH_LONG).show();
+                dialog.dismiss();
+            }
+        }).setNeutralButton("Cancel", new DialogInterface.OnClickListener()
+        {
+            @Override
+            public void onClick(final DialogInterface dialog, final int which)
+            {
+                dialog.dismiss();
+            }
+        }).create();
+        findViewById(R.id.am_fab).setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(final View v)
             {
-
+                alertDialog.show();
             }
         });
     }
@@ -160,3 +223,4 @@ public class MerchantHomeActivity extends NestedScrollHomeBaseActivity
 
 
 }
+

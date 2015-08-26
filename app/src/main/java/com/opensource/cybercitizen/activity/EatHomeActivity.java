@@ -8,12 +8,14 @@ import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
+import android.support.v4.util.ArrayMap;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.ArraySet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.SearchView;
 
 import com.bumptech.glide.Glide;
 import com.google.android.gms.common.ConnectionResult;
@@ -39,52 +41,192 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class EatHomeActivity extends RecyclerHomeBaseActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener
 {
     private final List<EatItem> mEatItems = new ArrayList<>();
+    private final ArrayMap<EatItem, List<String>> mEatItemSearchMap = new ArrayMap<>(16);
     private final String ACTIVITY_MAIN_TITLE = "Eat";
     GoogleApiClient mGoogleApiClient;
 
     Location mCurrentLocation;
     AtomicBoolean displayed = new AtomicBoolean(false);
-    private RecyclerView.Adapter<EatItem.EatItemViewHolder> mRecyclerAdapter = new RecyclerView.Adapter<EatItem.EatItemViewHolder>()
+    private RecyclerView.Adapter mRecyclerAdapter = new RecyclerView.Adapter()
     {
-        @Override
-        public EatItem.EatItemViewHolder onCreateViewHolder(final ViewGroup parent, final int viewType)
+        private static final int TOP_HEADER = 0;
+        private static final int ITEMS = 1;
+        final List<EatItem> mFilteredItems = new ArrayList<>(6);
+        private boolean isFiltered = false;
+        private final SearchView.OnQueryTextListener onQueryTextListener = new SearchView.OnQueryTextListener()
         {
-            final View itemView = LayoutInflater.from(EatHomeActivity.this).inflate(EatItem.EatItemViewHolder.getLayoutRes(), parent, false);
-            return new EatItem.EatItemViewHolder(itemView);
+
+            @Override
+            public boolean onQueryTextSubmit(final String query)
+            {
+
+                if (query != null)
+                {
+                    String searchQuery = query.trim();
+                    if (searchQuery.length() > 0)
+                    {
+                        isFiltered = true;
+                        notifyItemRangeRemoved(1, mEatItems.size() + 1);
+                        mFilteredItems.clear();
+                        mFilteredItems.addAll(search(searchQuery, false));
+                        notifyItemRangeInserted(1, mFilteredItems.size() + 1);
+                    }
+                    else
+                    {
+                        isFiltered = false;
+                        notifyItemRangeRemoved(1, mFilteredItems.size() + 1);
+                        notifyItemRangeInserted(1, mEatItems.size() + 1);
+                        mFilteredItems.clear();
+                    }
+                }
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(final String newText)
+            {
+                if (newText != null)
+                {
+                    String searchQuery = newText.trim();
+                    if (searchQuery.length() > 0)
+                    {
+                        isFiltered = true;
+                        notifyItemRangeRemoved(1, mEatItems.size() + 1);
+                        mFilteredItems.clear();
+                        mFilteredItems.addAll(search(newText, true));
+                        notifyItemRangeInserted(1, mFilteredItems.size() + 1);
+                    }
+                    else
+                    {
+                        isFiltered = false;
+                        notifyItemRangeRemoved(1, mFilteredItems.size() + 1);
+                        notifyItemRangeInserted(1, mEatItems.size() + 1);
+                        mFilteredItems.clear();
+                    }
+                }
+                return false;
+            }
+        };
+        private final SearchView.OnCloseListener mOnCloseListener = new SearchView.OnCloseListener()
+        {
+            @Override
+            public boolean onClose()
+            {
+                mFilteredItems.clear();
+                isFiltered = false;
+                return false;
+            }
+        };
+
+        private List<EatItem> search(String query, boolean singleLetterUpdate)
+        {
+            List<EatItem> out = new ArrayList<>();
+            for (int i = 0; i < mEatItemSearchMap.size(); i++)
+            {
+                List<String> searchTags = mEatItemSearchMap.valueAt(0);
+                for (String searchTag : searchTags)
+                {
+                    if (searchTag.equalsIgnoreCase(query))
+                    {
+                        out.add(mEatItemSearchMap.keyAt(i));
+                        break;
+                    }
+                    if (singleLetterUpdate)
+                    {
+                        if (searchTag.matches(".*" + query + ".*"))
+                        {
+                            out.add(mEatItemSearchMap.keyAt(i));
+                            break;
+                        }
+                    }
+                }
+            }
+
+            return out;
+        }
+        @Override
+        public int getItemViewType(final int position)
+        {
+            if (position == 0)
+            {
+                return TOP_HEADER;
+            }
+            return ITEMS;
         }
 
         @Override
-        public void onBindViewHolder(final EatItem.EatItemViewHolder holder, final int position)
+        public RecyclerView.ViewHolder onCreateViewHolder(final ViewGroup parent, final int viewType)
         {
-
-            final EatItem eatItem = mEatItems.get(position);
-
-
-            holder.setOnClickCallback(new View.OnClickListener()
+            final LayoutInflater layoutInflater = LayoutInflater.from(EatHomeActivity.this);
+            if (viewType == ITEMS)
             {
-                @Override
-                public void onClick(final View v)
-                {
-                    launchDialog(eatItem, getContentContainer());
-
-                }
-            });
-
-            holder.bindData(eatItem, EatHomeActivity.this);
-
-            if (mGoogleApiClient.isConnected() && mCurrentLocation != null)
-            {
-                holder.displayDistanceFrom(eatItem, mCurrentLocation);
+                return new EatItem.EatItemViewHolder(layoutInflater.inflate(EatItem.EatItemViewHolder.getLayoutRes(), parent, false));
             }
+            else if (viewType == TOP_HEADER)
+            {
+                return new HeaderSearchHolder(layoutInflater.inflate(HeaderSearchHolder.getLayoutRes(), parent, false));
+            }
+            else return null;
+        }
 
+        @Override
+        public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position)
+        {
+            if (holder != null)
+            {
+                if (holder instanceof EatItem.EatItemViewHolder && position > 0)
+                {
+                    EatItem eatItem = null;
+                    int offsetPos = position - 1;
+                    if (isFiltered)
+                    {
+                        if (mFilteredItems.size() > 0)
+                        {
+                            eatItem = mFilteredItems.get(offsetPos);
+                        }
+                    }
+                    else
+                    {
+                        eatItem = mEatItems.get(offsetPos);
+                    }
+
+                    if (eatItem != null)
+                    {
+                        EatItem.EatItemViewHolder viewHolder = (EatItem.EatItemViewHolder) holder;
+                        final EatItem outEat = eatItem;
+                        viewHolder.setOnClickCallback(new View.OnClickListener()
+                        {
+                            @Override
+                            public void onClick(final View v)
+                            {
+                                launchDialog(outEat, getContentContainer());
+                            }
+                        });
+
+                        viewHolder.bindData(eatItem, EatHomeActivity.this);
+
+                        if (mGoogleApiClient.isConnected() && mCurrentLocation != null)
+                        {
+                            viewHolder.displayDistanceFrom(eatItem, mCurrentLocation);
+                        }
+                    }
+                }
+                else if (holder instanceof HeaderSearchHolder)
+                {
+                    final HeaderSearchHolder viewHolder = (HeaderSearchHolder) holder;
+
+                    viewHolder.bindData(onQueryTextListener, mOnCloseListener);
+                }
+            }
         }
 
         @Override
         public int getItemCount()
         {
-            return mEatItems.size();
+            return mEatItems.size() + 1;
         }
     };
+
 
     @Override
     protected void onCreate(final Bundle savedInstanceState)
@@ -115,6 +257,14 @@ public class EatHomeActivity extends RecyclerHomeBaseActivity implements GoogleA
         pizzaHut.setLatLng(new LatLng(2.920422, 101.6591227));
 
         mEatItems.addAll(Arrays.asList(subway, kfc, pizzaHut, secretRecipe, starbucks, matAyam));
+
+        for (EatItem eatItem : mEatItems)
+        {
+            List<String> searchStrings = new ArrayList<>();
+            searchStrings.add(eatItem.getHeader());
+            searchStrings.addAll(eatItem.getTags());
+            mEatItemSearchMap.put(eatItem, searchStrings);
+        }
     }
 
     @Override
@@ -157,23 +307,31 @@ public class EatHomeActivity extends RecyclerHomeBaseActivity implements GoogleA
 
     public void launchDialog(EatItem eatItem, ViewGroup parent)
     {
-        startActivityForResult(new Intent(this, EatDialogActivity.class).putExtra(EatDialogActivity.getEatItemIntentKey(), eatItem), 0);
+        startActivityForResult(EatDialogActivity.getDialogIntent(this, eatItem, mCurrentLocation), 0);
     }
 
     @Override
     protected void onResume()
     {
         super.onResume();
-        if (!mGoogleApiClient.isConnected() && !mGoogleApiClient.isConnecting())
-            mGoogleApiClient.connect();
+//        if (!mGoogleApiClient.isConnected() && !mGoogleApiClient.isConnecting())
+//            mGoogleApiClient.connect();
+    }
+
+    @Override
+    protected void onStop()
+    {
+        super.onStop();
+        LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
+        mGoogleApiClient.disconnect();
     }
 
     @Override
     protected void onPause()
     {
         super.onPause();
-        LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
-        mGoogleApiClient.disconnect();
+//        LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
+//        mGoogleApiClient.disconnect();
     }
 
     @Override
@@ -210,7 +368,7 @@ public class EatHomeActivity extends RecyclerHomeBaseActivity implements GoogleA
                         }
                     });
 
-                    builder.setMessage("COUPON: CYBERCEEJAY15");
+                    builder.setMessage("COUPON: CYBERJAYAFAIR15");
                     builder.show();
                 }
             }).show();
@@ -247,7 +405,7 @@ public class EatHomeActivity extends RecyclerHomeBaseActivity implements GoogleA
     public void onLocationChanged(final Location location)
     {
         sortToNearest(location);
-        mRecyclerAdapter.notifyDataSetChanged();
+        mRecyclerAdapter.notifyItemRangeChanged(1, mEatItems.size() + 1);
     }
 
     private void sortToNearest(final Location location)
@@ -261,5 +419,28 @@ public class EatHomeActivity extends RecyclerHomeBaseActivity implements GoogleA
             }
         };
         Collections.sort(mEatItems, comparator);
+    }
+
+    private static class HeaderSearchHolder extends RecyclerView.ViewHolder
+    {
+
+        private final SearchView mSearchView;
+
+        public HeaderSearchHolder(final View itemView)
+        {
+            super(itemView);
+            mSearchView = (SearchView) itemView.findViewById(R.id.lhs_searchview);
+        }
+
+        public static int getLayoutRes()
+        {
+            return R.layout.layout_header_search;
+        }
+
+        public void bindData(SearchView.OnQueryTextListener listener, SearchView.OnCloseListener onCloseListener)
+        {
+            mSearchView.setOnQueryTextListener(listener);
+            mSearchView.setOnCloseListener(onCloseListener);
+        }
     }
 }

@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -25,10 +26,12 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMapOptions;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.opensource.cybercitizen.R;
+import com.opensource.cybercitizen.activity.model.DTSBus;
 import com.opensource.cybercitizen.activity.model.EatItem;
 import com.opensource.cybercitizen.controller.Weather;
 import com.opensource.util.Util;
@@ -53,6 +56,7 @@ public class EatDialogActivity extends AppCompatActivity implements OnMapReadyCa
     private TextView tags;
     private FrameLayout mFrameLayout;
     private Location mLastLocation;
+    private DTSBus mNearestBus;
 
     public static Intent getDialogIntent(Context context, EatItem eatItem, @Nullable Location currentLocation)
     {
@@ -89,6 +93,32 @@ public class EatDialogActivity extends AppCompatActivity implements OnMapReadyCa
         bindData(mEatItem);
         weatherData = new Weather();
         weatherData.getWeather(this);
+
+
+        float shortestDistance = -2;
+
+        for (int i = 0; i < DTSBus.Dataset.getLength(); i++)
+        {
+            final DTSBus dtsBus = DTSBus.Dataset.getData(i);
+            if (shortestDistance == -2)
+            {
+                mNearestBus = dtsBus;
+                Log.v(getLocalClassName(), dtsBus.toString());
+                shortestDistance = mNearestBus.getDistanceTo(mLastLocation);
+            }
+            else
+            {
+                final float distance = mNearestBus.getDistanceTo(dtsBus.getLocation());
+                if (distance <= shortestDistance)
+                {
+                    mNearestBus = dtsBus;
+                }
+            }
+        }
+        if (DTSBus.Dataset.isUnindentifiedStation(mNearestBus.getStation()))
+        {
+            mNearestBus = DTSBus.Dataset.getReplacementForUnindentifiedStation();
+        }
     }
 
     public void setup()
@@ -106,7 +136,6 @@ public class EatDialogActivity extends AppCompatActivity implements OnMapReadyCa
         mSuggestion = (TextView) findViewById(R.id.special_suggestion);
         mFrameLayout = (FrameLayout) findViewById(R.id.special_mapfragment);
     }
-
 
     public void bindData(final EatItem eatItem)
     {
@@ -153,7 +182,6 @@ public class EatDialogActivity extends AppCompatActivity implements OnMapReadyCa
 
     }
 
-
     private void unbind()
     {
         //getSupportFragmentManager().beginTransaction().remove(mMapFragment).commit();
@@ -183,16 +211,16 @@ public class EatDialogActivity extends AppCompatActivity implements OnMapReadyCa
             calendar.setTimeInMillis(System.currentTimeMillis());
             SimpleDateFormat dateFormat = new SimpleDateFormat("hh:mm a", Locale.getDefault());
 
+            final String station = mNearestBus.getStation().trim();
+            calendar.roll(Calendar.HOUR_OF_DAY, 1);
             if (calendar.get(Calendar.HOUR_OF_DAY) > 12)
             {
-                calendar.add(Calendar.HOUR_OF_DAY, 1);
-
-                mSuggestion.setText("Going back? Next bus near you: HSBC " + dateFormat.format(calendar.getTime()));
+                mSuggestion.setText("Going back? Next bus near you at:\n" + station + " will be arriving at " + dateFormat.format(calendar.getTime()));
 
             }
             else
             {
-                mSuggestion.setText("Going to work? Next DTS bus near your location will be arriving at " + dateFormat.format(calendar.getTime()));
+                mSuggestion.setText("Going out? Next DTS bus at:\n" + station + " will be arriving at " + dateFormat.format(calendar.getTime()));
 
             }
             //mSuggestion.setCompoundDrawables(drawable, null, null, null);
@@ -250,7 +278,7 @@ public class EatDialogActivity extends AppCompatActivity implements OnMapReadyCa
                     markerOptions.snippet(Util.formatDistanceInMeters(mLastLocation.distanceTo(mEatItem.getLocation()), 1));
                 }
                 googleMap.addMarker(markerOptions).showInfoWindow();
-
+                googleMap.addMarker(new MarkerOptions().position(new LatLng(mNearestBus.getLatitude(), mNearestBus.getLongitude())).title(mNearestBus.getStation()).snippet(mNearestBus.getLocationHint().trim()).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
             }
         }
     }

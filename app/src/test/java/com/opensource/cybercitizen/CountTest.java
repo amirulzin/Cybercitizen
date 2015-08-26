@@ -1,5 +1,6 @@
 package com.opensource.cybercitizen;
 
+import com.opensource.cybercitizen.activity.model.DTSBus;
 import com.opensource.cybercitizen.activity.model.Merchant;
 
 import org.junit.Test;
@@ -74,5 +75,14 @@ public class CountTest
         final Merchant merchant = getMerchant();
         System.out.println(merchant.getActualDemands().size());
         System.out.println(merchant.getForecastDemands().size());
+    }
+
+    @Test
+    public void testDTS()
+    {
+        for (int i : DTSBus.Dataset.getLengths())
+        {
+            System.out.println("LENGTH " + i);
+        }
     }
 }
