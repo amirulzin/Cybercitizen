@@ -6,11 +6,6 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.github.mikephil.charting.animation.Easing;
-import com.github.mikephil.charting.charts.BarChart;
-import com.github.mikephil.charting.data.BarData;
-import com.github.mikephil.charting.data.BarDataSet;
-import com.github.mikephil.charting.data.BarEntry;
 import com.opensource.cybercitizen.R;
 import com.opensource.cybercitizen.activity.model.Merchant;
 import com.opensource.cybercitizen.base.NestedScrollHomeBaseActivity;
@@ -21,7 +16,6 @@ import java.util.List;
 public class MerchantHomeActivity extends NestedScrollHomeBaseActivity
 {
 
-    private BarChart mBarChart;
 
     @Override
     public void setupView(final Bundle savedInstanceState, final View baseLayout)
@@ -33,18 +27,7 @@ public class MerchantHomeActivity extends NestedScrollHomeBaseActivity
         int day = 7;
         Merchant merchant = getMerchant();
 
-        mBarChart = null;
 
-        mBarChart.post(new Runnable()
-        {
-            @Override
-            public void run()
-            {
-                mBarChart.animateY(2500, Easing.EasingOption.EaseInQuad);
-            }
-        });
-        mBarChart.setAutoScaleMinMaxEnabled(true);
-        List<BarEntry> actualEntry = new ArrayList<>();
         int maxActualCongestion = 0;
         List<String> xAxis = new ArrayList<>();
         for (int i = 1; i < 25; i++)
@@ -60,36 +43,26 @@ public class MerchantHomeActivity extends NestedScrollHomeBaseActivity
                     maxActualCongestion = actualDemand.getCongestion();
                 }
 
-                BarEntry entry = new BarEntry(actualDemand.getCongestion(), actualDemand.getHour());
-                actualEntry.add(entry);
 
             }
         }
         final String yLabel = "Congestion per hour on " + day + " Aug";
-        BarDataSet actualBarDataSet = new BarDataSet(actualEntry, yLabel);
-        final BarData actualData = new BarData(xAxis, actualBarDataSet);
 
 
-        List<BarEntry> forecastEntries = new ArrayList<>();
+        int total = 0;
+        int totalCount = 1;
         for (Merchant.Demand forecastDemand : merchant.getForecastDemands())
         {
             if (forecastDemand.getDay() == day)
             {
-                BarEntry entry = new BarEntry(forecastDemand.getCongestion(), forecastDemand.getHour());
-                forecastEntries.add(entry);
+                total += forecastDemand.getCongestion();
+                totalCount++;
             }
         }
-        BarDataSet forecastDataSet = new BarDataSet(forecastEntries, yLabel);
-        final BarData forecastData = new BarData(xAxis, forecastDataSet);
-
-
-        mBarChart.setData(actualData);
-        mBarChart.setDescription(null);
-        mBarChart.getAxisRight().setDrawGridLines(false);
 
 
         ((TextView) findViewById(R.id.am_congestion_highest)).setText(String.valueOf(maxActualCongestion));
-        ((TextView) findViewById(R.id.am_congestion_lowest)).setText(String.format("%.1f", actualData.getYValueSum() / actualData.getXValCount()));
+        ((TextView) findViewById(R.id.am_congestion_average)).setText(String.format("%.1f", total / (float) totalCount));
 
 
         findViewById(R.id.am_actual).setOnClickListener(new View.OnClickListener()
@@ -97,8 +70,6 @@ public class MerchantHomeActivity extends NestedScrollHomeBaseActivity
             @Override
             public void onClick(final View v)
             {
-                mBarChart.setData(actualData);
-                mBarChart.animateY(1000, Easing.EasingOption.EaseInQuad);
             }
         });
 
@@ -108,8 +79,6 @@ public class MerchantHomeActivity extends NestedScrollHomeBaseActivity
             @Override
             public void onClick(final View v)
             {
-                mBarChart.setData(forecastData);
-                mBarChart.animateY(1000, Easing.EasingOption.EaseInQuad);
             }
         });
 

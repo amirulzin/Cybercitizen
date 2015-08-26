@@ -69,35 +69,8 @@ public class EatHomeActivity extends RecyclerHomeBaseActivity implements GoogleA
 
                 }
             });
-//            if (holder instanceof EatItem.EatItemViewHolder.ExpandedView)
-//            {
-//                final EatItem.EatItemViewHolder.ExpandedView expandedHolder = (EatItem.EatItemViewHolder.ExpandedView) holder;
-//
-//                expandedHolder.setOnClickCallback(new View.OnClickListener()
-//                {
-//                    @Override
-//                    public void onClick(final View v)
-//                    {
-//                        Log.v("EXPANDED", "POS" + position);
-//                        if (v.getId() == R.id.li_eh_baseview)
-//                        {
-//                            eatItem.setExpanded(false);
-//                            notifyItemChanged(position);
-//                        }
-//
-//                    }
-//                });
-//
-//                expandedHolder.bindData(eatItem, EatHomeActivity.this);
-//            }
-//            else
-//            {
-//
-//
-//            }
+
             holder.bindData(eatItem, EatHomeActivity.this);
-//            if (eatItem.getTimedPromo() > 0)
-//                holder.startTimer();
 
             if (mGoogleApiClient.isConnected() && mCurrentLocation != null)
             {
@@ -142,11 +115,6 @@ public class EatHomeActivity extends RecyclerHomeBaseActivity implements GoogleA
         pizzaHut.setLatLng(new LatLng(2.920422, 101.6591227));
 
         mEatItems.addAll(Arrays.asList(subway, kfc, pizzaHut, secretRecipe, starbucks, matAyam));
-
-//        mEatItems.put(kfc, kfc.getExpanded());
-//        mEatItems.put(mcD, mcD.getExpanded());
-//        mEatItems.put(starbucks, starbucks.getExpanded());
-//        mEatItems.put(pizzaHut, pizzaHut.getExpanded());
     }
 
     @Override

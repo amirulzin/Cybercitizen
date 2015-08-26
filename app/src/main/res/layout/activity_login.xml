@@ -46,7 +46,8 @@
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/al_input_email"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:textColorHint="?attr/colorAccent">
 
                 <EditText
                     android:layout_width="match_parent"
@@ -73,7 +74,8 @@
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/al_input_pass"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:textColorHint="?attr/colorAccent">
 
                 <EditText
                     android:layout_width="match_parent"
@@ -131,6 +133,10 @@
                 android:textStyle="bold" />
         </LinearLayout>
 
+        <EditText
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
     </LinearLayout>
 
 </android.support.design.widget.CoordinatorLayout>

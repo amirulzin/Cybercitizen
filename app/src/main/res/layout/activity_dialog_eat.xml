@@ -14,11 +14,11 @@
         android:paddingBottom="4dp">
 
         <ImageView
-
             android:id="@+id/li_eh_image"
             android:layout_width="56dp"
             android:layout_height="56dp"
-            android:layout_margin="8dp"
+            android:layout_centerVertical="true"
+            android:layout_margin="16dp"
             android:scaleType="fitXY"
             tools:background="?attr/colorPrimary" />
 
