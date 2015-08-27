@@ -1,6 +1,7 @@
 package com.opensource.cybercitizen.activity;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
@@ -9,7 +10,9 @@ import android.support.annotation.ColorInt;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.graphics.drawable.DrawableCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -19,6 +22,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.opensource.common.ui.GridItemDecoration;
@@ -128,6 +132,40 @@ public class HomeActivity extends RecyclerHomeBaseActivity
             drawable = getResources().getDrawable(R.drawable.gradient_shadow_top, getTheme());
 
         getCollapsingToolbarLayout().setForeground(drawable);
+
+
+        //Report Dialog
+        final AlertDialog alertDialog = new AlertDialog.Builder(HomeActivity.this).setPositiveButton("Report", new DialogInterface.OnClickListener()
+        {
+            @Override
+            public void onClick(final DialogInterface dialog, final int which)
+            {
+                Toast.makeText(HomeActivity.this, "Your report has been submitted", Toast.LENGTH_LONG).show();
+                dialog.dismiss();
+            }
+        }).setNeutralButton("Cancel", new DialogInterface.OnClickListener()
+        {
+            @Override
+            public void onClick(final DialogInterface dialog, final int which)
+            {
+                dialog.dismiss();
+            }
+        }).setTitle("Report").setView(R.layout.dialog_report).create();
+
+        FloatingActionButton mainFab = (FloatingActionButton) findViewById(R.id.lbnc_mainfab);
+
+        mainFab.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(final View v)
+            {
+                alertDialog.show();
+            }
+        });
+
+        mainFab.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_info));
+
+        mainFab.setVisibility(View.VISIBLE);
     }
 
     private void setupItems(final List<HomeListItem> homeListItems)

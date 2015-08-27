@@ -6,6 +6,7 @@ import android.content.Intent;
 import com.opensource.cybercitizen.R;
 import com.opensource.cybercitizen.activity.EatHomeActivity;
 import com.opensource.cybercitizen.activity.HomeActivity;
+import com.opensource.cybercitizen.activity.PromoActivity;
 
 public final class ActivityFactory
 {
@@ -19,6 +20,9 @@ public final class ActivityFactory
                 break;
             case R.id.md_nav_eat:
                 intent.setClass(context, EatHomeActivity.class);
+                break;
+            case R.id.md_nav_promo:
+                intent.setClass(context, PromoActivity.class);
                 break;
             default:
                 intent = null;

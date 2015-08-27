@@ -5,6 +5,10 @@
             android:id="@+id/md_nav_home"
             android:icon="@drawable/ic_action_location_city"
             android:title="@string/activity_home" />
+        <item
+            android:id="@+id/md_nav_promo"
+            android:icon="@drawable/ic_action_stars"
+            android:title="@string/activity_promo" />
     </group>
     <group android:id="@+id/md_group_mid">
         <item

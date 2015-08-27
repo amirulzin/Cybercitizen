@@ -1,5 +1,7 @@
 package com.opensource.cybercitizen.base;
 
+import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -10,10 +12,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import com.opensource.common.ui.BaseDrawerActivity;
 import com.opensource.cybercitizen.R;
 
-public abstract class NestedScrollHomeBaseActivity extends BaseDrawerActivity
+public abstract class NestedScrollHomeBaseActivity extends SpecialIntermediateActivity
 {
     private NestedScrollView mNestedScrollView;
     private CollapsingToolbarLayout mCollapsingToolbarLayout;
@@ -58,6 +59,7 @@ public abstract class NestedScrollHomeBaseActivity extends BaseDrawerActivity
 
         mCollapsingToolbarLayout = (CollapsingToolbarLayout) baseLayout.findViewById(R.id.lbnc_collapsingtoolbar);
         mNestedScrollView = (NestedScrollView) baseLayout.findViewById(R.id.lbnc_scrollview);
+        applySpecialOverlay();
     }
 
     public View inflateNestedContent(@LayoutRes int layoutResourceId)
@@ -66,5 +68,18 @@ public abstract class NestedScrollHomeBaseActivity extends BaseDrawerActivity
         NestedScrollView.LayoutParams params = new NestedScrollView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         mNestedScrollView.addView(inflatedView, 0, params);
         return inflatedView;
+    }
+
+    private void applySpecialOverlay()
+    {
+        final Drawable drawable;
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP_MR1)
+        {
+            drawable = getResources().getDrawable(R.drawable.gradient_shadow_top);
+        }
+        else
+            drawable = getResources().getDrawable(R.drawable.gradient_shadow_top, getTheme());
+
+        getCollapsingToolbarLayout().setForeground(drawable);
     }
 }

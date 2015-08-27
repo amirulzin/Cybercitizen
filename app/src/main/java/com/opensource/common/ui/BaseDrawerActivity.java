@@ -27,6 +27,7 @@ public abstract class BaseDrawerActivity extends AppCompatActivity
     private ActionBarDrawerToggle mDrawerToggle;
     private ImageView mNavHeaderImageView;
     private NavigationView mNavigationView;
+    private NavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener;
 
     public ImageView getNavHeaderImageView()
     {
@@ -55,12 +56,17 @@ public abstract class BaseDrawerActivity extends AppCompatActivity
         setupViews(savedInstanceState);
     }
 
+    public NavigationView.OnNavigationItemSelectedListener getOnNavigationItemSelectedListener()
+    {
+        return mOnNavigationItemSelectedListener;
+    }
+
     private void setupViews(final Bundle savedInstanceState)
     {
         mDrawerLayout = (DrawerLayout) findViewById(R.id.lbd_drawerlayout);
         mFrameLayout = (FrameLayout) findViewById(R.id.lbd_contentcontainer);
         mNavigationView = (NavigationView) findViewById(R.id.lbd_navigationview);
-        mNavigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener()
+        mOnNavigationItemSelectedListener = new NavigationView.OnNavigationItemSelectedListener()
         {
             @Override
             public boolean onNavigationItemSelected(MenuItem menuItem)
@@ -73,7 +79,8 @@ public abstract class BaseDrawerActivity extends AppCompatActivity
                 mDrawerLayout.closeDrawers();
                 return false;
             }
-        });
+        };
+        mNavigationView.setNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         mNavHeaderImageView = (ImageView) mNavigationView.findViewById(R.id.lnh_headerimage);
     }
 

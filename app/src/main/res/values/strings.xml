@@ -13,4 +13,5 @@
     <string name="activity_outdoor">Outdoor</string>
     <string name="activity_exhibition">Exhibition</string>
     <string name="activity_profile">Profile</string>
+    <string name="activity_promo">Saved Promos</string>
 </resources>

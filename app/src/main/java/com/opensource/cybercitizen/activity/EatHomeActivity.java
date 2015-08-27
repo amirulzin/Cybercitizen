@@ -1,14 +1,12 @@
 package com.opensource.cybercitizen.activity;
 
-import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.location.Location;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.util.ArrayMap;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.ArraySet;
@@ -277,15 +275,7 @@ public class EatHomeActivity extends RecyclerHomeBaseActivity implements GoogleA
         recyclerView.setLayoutManager(new LinearLayoutManager(EatHomeActivity.this, LinearLayoutManager.VERTICAL, false));
 
         Glide.with(this).load(R.raw.eat_header).into(getHeaderImageView());
-        final Drawable drawable;
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP_MR1)
-        {
-            drawable = getResources().getDrawable(R.drawable.gradient_shadow_top);
-        }
-        else
-            drawable = getResources().getDrawable(R.drawable.gradient_shadow_top, getTheme());
 
-        getCollapsingToolbarLayout().setForeground(drawable);
         setDrawerNavigationButton(getTitleToolbar());
 
         Util.postOnPreDraw(recyclerView, new Runnable()
@@ -296,7 +286,6 @@ public class EatHomeActivity extends RecyclerHomeBaseActivity implements GoogleA
                 displayed.set(true);
             }
         });
-
     }
 
     @Override

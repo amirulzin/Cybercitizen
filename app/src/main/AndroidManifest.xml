@@ -19,12 +19,17 @@
             android:value="@string/google_maps_key" />
 
         <activity
+            android:name=".activity.PromoActivity"
+            android:label="@string/activity_promo" />
+        <activity
             android:name=".activity.HomeActivity"
             android:label="@string/app_name" />
         <activity
             android:name=".activity.EatHomeActivity"
             android:label="Eat" />
-
+        <activity
+            android:name=".activity.UserActivity"
+            android:label="@string/activity_profile" />
         <activity
             android:name=".activity.LoginActivity"
             android:label="@string/app_name">
@@ -35,6 +40,7 @@
             </intent-filter>
         </activity>
 
+
         <activity
             android:name=".activity.EatDialogActivity"
             android:theme="@style/AppTheme.Dialog" />
@@ -42,6 +48,17 @@
         <activity
             android:name=".activity.MerchantHomeActivity"
             android:label="Cybercitizen (Merchant)">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+
+        <activity
+            android:name=".activity.CyberviewActivity"
+            android:label="Cybercitizen (Cyberview)">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
