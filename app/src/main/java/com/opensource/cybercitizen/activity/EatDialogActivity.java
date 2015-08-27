@@ -1,5 +1,6 @@
 package com.opensource.cybercitizen.activity;
 
+import android.animation.Animator;
 import android.animation.ObjectAnimator;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -17,6 +18,7 @@ import android.support.v7.widget.CardView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -144,7 +146,35 @@ public class EatDialogActivity extends AppCompatActivity implements OnMapReadyCa
         mFrameLayout = (FrameLayout) findViewById(R.id.special_mapfragment);
         mSuggestionContainer = (CardView) findViewById(R.id.li_eh_detailview);
 
-        mSuggestionAnimator = ObjectAnimator.ofFloat(mSuggestionContainer, "rotationX", 360).setDuration(150);
+
+        mSuggestionAnimator = ObjectAnimator.ofFloat(mSuggestionContainer, "rotationX", 360).setDuration(250);
+        mSuggestionAnimator.setInterpolator(new DecelerateInterpolator());
+        mSuggestionAnimator.addListener(new Animator.AnimatorListener()
+        {
+            @Override
+            public void onAnimationStart(final Animator animation)
+            {
+                ObjectAnimator.ofFloat(mSuggestion, "alpha", 0f).setDuration(100).start();
+            }
+
+            @Override
+            public void onAnimationEnd(final Animator animation)
+            {
+                ObjectAnimator.ofFloat(mSuggestion, "alpha", 1f).setDuration(100).start();
+            }
+
+            @Override
+            public void onAnimationCancel(final Animator animation)
+            {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(final Animator animation)
+            {
+
+            }
+        });
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2)
         {
             mSuggestionAnimator.setAutoCancel(true);

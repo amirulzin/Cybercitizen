@@ -163,7 +163,7 @@ public class HomeActivity extends RecyclerHomeBaseActivity
             }
         });
 
-        mainFab.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_info));
+        mainFab.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_assignment));
 
         mainFab.setVisibility(View.VISIBLE);
     }
